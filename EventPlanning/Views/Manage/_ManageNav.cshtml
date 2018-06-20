@@ -1,0 +1,20 @@
+﻿@using EventPlanning.Views.Manage
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+<ul class="nav flex-column nav-pills">
+    <li class="@ManageNavPages.IndexNavClass(ViewContext)">
+        <a asp-action="Index" class="badge badge-secondary">Профиль</a>
+    </li>
+    <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)">
+        <a asp-action="ChangePassword" class="badge badge-secondary">Сменить пароль</a>
+    </li>
+    @if (hasExternalLogins)
+    {
+        <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-action="ExternalLogins">External logins</a></li>
+    }
+    @*<li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>*@
+</ul>
+
