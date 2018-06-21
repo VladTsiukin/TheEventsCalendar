@@ -12,11 +12,8 @@ $('#datepicker').datepicker({
 
 
 $('#datepicker').on('changeDate', function () {
-    $('#my_hidden_input').val(
-        $('#datepicker').datepicker('getFormattedDate')
-    );
+    
 });
-
 /*------------------------------------------------- */
 
 
@@ -24,6 +21,8 @@ $('#datepicker').on('changeDate', function () {
 $('.container-fields').height(($(document).height() - 180));
 
 /* d-picker-btn */
- $('#d-picker-btn').click((e) => {
-     console.log('d-picker-btn go!');
+$('#d-picker-btn').click((e) => {
+    const el = document.createElement('h5');
+    el.textContent = $('#datepicker').datepicker('getFormattedDate');
+     $('.event-h4').after(el);      
 });

@@ -41,3 +41,9 @@ footer {
   -webkit-box-pack: initial;
   -ms-flex-pack: initial;
   justify-content: initial; }
+
+.fa-calendar-plus {
+  font-size: 3rem; }
+
+.fa-pen-square {
+  font-size: 3.15rem; }
