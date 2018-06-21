@@ -9,5 +9,11 @@ namespace EventPlanning.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            this.Events = new HashSet<Event>();
+        }
+
+        public virtual ICollection<Event> Events {get; set; }
     }
 }

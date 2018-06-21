@@ -6,7 +6,7 @@
 
 <div class="d-flex flex-row container-fields">
     <div class="d-p-field mr-5">
-        <div id="datepicker" data-date=""></div>
+        <div id="datepicker" data-date="@DateTime.Now.ToLocalTime().ToString()"></div>
         <input type="hidden" id="my_hidden_input">
         <div class="d-flex align-items-center flex-column mt-5">
             <button id="d-picker-btn" class="btn btn-sm btn-outline-secondary mt-3">d-picker-btn</button>

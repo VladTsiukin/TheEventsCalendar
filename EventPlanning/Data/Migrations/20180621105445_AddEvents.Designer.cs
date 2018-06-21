@@ -11,9 +11,10 @@ using System;
 namespace EventPlanning.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180621105445_AddEvents")]
+    partial class AddEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,13 +77,7 @@ namespace EventPlanning.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AmountOfParticipants");
-
                     b.Property<string>("AppUserId");
-
-                    b.Property<DateTimeOffset>("DateOfCreation");
-
-                    b.Property<DateTimeOffset>("EventDate");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -209,7 +204,7 @@ namespace EventPlanning.Data.Migrations
             modelBuilder.Entity("EventPlanning.Models.Event", b =>
                 {
                     b.HasOne("EventPlanning.Models.ApplicationUser", "AppUser")
-                        .WithMany("Events")
+                        .WithMany()
                         .HasForeignKey("AppUserId");
                 });
 

@@ -6,7 +6,7 @@
 
 $('#datepicker').datepicker({
     language: 'ru',
-    todayHighlight: true,
+    todayHighlight: false,
     todayBtn: true
 });
 

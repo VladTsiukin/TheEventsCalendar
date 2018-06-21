@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\EventsViewModels\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

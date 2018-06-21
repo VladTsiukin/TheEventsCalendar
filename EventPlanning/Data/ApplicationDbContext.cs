@@ -10,6 +10,8 @@ namespace EventPlanning.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public virtual DbSet<Event> Events { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -21,6 +23,10 @@ namespace EventPlanning.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+
+            // set json data
+            builder.Entity<Event>()
+                .Property(e => e._Content).HasColumnName("Content");
         }
     }
 }
