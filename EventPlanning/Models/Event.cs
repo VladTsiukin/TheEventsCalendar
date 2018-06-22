@@ -15,6 +15,7 @@ namespace EventPlanning.Models
         [MaxLength(50, ErrorMessage = "You can enter no more than 50 characters!")]
         public string Name { get; set; }
         [Required]
+        [MaxLength(int.MaxValue)]
         public int AmountOfParticipants { get; set; } = 0;
         [Required]
         public DateTimeOffset DateOfCreation{ get; set; }

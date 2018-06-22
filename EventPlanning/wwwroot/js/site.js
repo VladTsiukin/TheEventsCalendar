@@ -26,3 +26,4 @@ $('#d-picker-btn').click((e) => {
     el.textContent = $('#datepicker').datepicker('getFormattedDate');
      $('.event-h4').after(el);      
 });
+

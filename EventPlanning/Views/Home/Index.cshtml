@@ -2,7 +2,9 @@
     ViewData["Title"] = "Home Page";
 }
 
-
+@{ 
+    int fieldId = 0;
+}
 
 <div class="d-flex flex-row container-fields">
     <div class="d-p-field mr-5">
@@ -24,7 +26,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">СОБЫТИЕ</h5>
@@ -33,39 +35,73 @@
                 </button>
             </div>
             <div class="modal-body">
-                @* INPUT *@
+                @* INPUT NAME *@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
                     </div>
                     <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                 </div>
-                @* INPUT *@
+                @* INPUT DATE *@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
                     </div>
                     <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                 </div>
-                @* INPUT *@
+                @* INPUT NUMBER *@
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Small</span>
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Количество участников</span>
                     </div>
-                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                    <div class="input-group-append">
-                        <a class="btn btn-sm btn-outline-danger" href="#">x</a>
-                    </div>
+                    <input type="number" min="0" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                 </div>
-                @* INPUT *@
-
+                @* BUTTON ADD FIELD *@
+                <button id="addField" type="button" class="btn btn-primary btn-sm mb-3">
+                    <i class="fas fa-plus">Добавить Поле</i>
+                </button>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary">Сохранить</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+@*<div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span>
+    </div>
+    <input data-field="1" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span>
+    </div>
+    <input data-field="2" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+    <div class="input-group-append">
+        <a class="btn btn-sm btn-outline-danger" href="#">x</a>
+    </div>
+</div>*@
+
+<script type="text/javascript">
+
+
+
+    const addBtn = document.getElementById('addField');
+    addBtn.addEventListener('click', () => {
+        addBtn.insertAdjacentElement('afterend', setField(@fieldId));
+    });
+
+    function setField(field) {
+        let innerFields = '<div data-field-id="@fieldId++" class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span></div><input data-field="1" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span></div><input data-field="2" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-append"><a class="btn btn-sm btn-outline-danger" href="#">x</a></div>';
+
+        field = document.createElement('div');
+        field.classList.add('input-group');
+        field.classList.add('input-group-sm');
+        field.classList.add('mb-3');
+        field.innerHTML = innerFields;
+        return field;
+    }
+
+</script>
