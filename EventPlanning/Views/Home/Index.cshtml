@@ -2,9 +2,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-@{ 
-    int fieldId = 0;
-}
 
 <div class="d-flex flex-row container-fields">
     <div class="d-p-field mr-5">
@@ -86,22 +83,27 @@
 
 <script type="text/javascript">
 
+    document.addEventListener('DOMContentLoaded', () => {
+        let fieldId = 0;
+        const addBtn = document.getElementById('addField');
+        const modalFooter = document.getElementsByClassName('modal-footer')[0];
 
+        addBtn.addEventListener('click', () => {
+            modalFooter.insertAdjacentElement('beforebegin', setField(fieldId));
+        });
 
-    const addBtn = document.getElementById('addField');
-    addBtn.addEventListener('click', () => {
-        addBtn.insertAdjacentElement('afterend', setField(@fieldId));
+        function setField(fieldId) {
+            let fieldName = 'field' + (++fieldId);
+            let innerFields = '<div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span></div><input data-field="1" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span></div><input data-field="2" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-append"><a class="btn btn-sm btn-outline-danger" href="#">x</a></div>';
+
+            field = document.createElement('div');
+            field.setAttribute('data-field-id', fieldName);
+            field.classList.add('input-group');
+            field.classList.add('input-group-sm');
+            field.classList.add('mb-3');
+            field.innerHTML = innerFields;
+            return field;
+        }
     });
-
-    function setField(field) {
-        let innerFields = '<div data-field-id="@fieldId++" class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span></div><input data-field="1" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span></div><input data-field="2" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-append"><a class="btn btn-sm btn-outline-danger" href="#">x</a></div>';
-
-        field = document.createElement('div');
-        field.classList.add('input-group');
-        field.classList.add('input-group-sm');
-        field.classList.add('mb-3');
-        field.innerHTML = innerFields;
-        return field;
-    }
 
 </script>
