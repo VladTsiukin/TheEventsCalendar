@@ -18,7 +18,11 @@ namespace EventPlanning.Controllers
             return View();
         }
 
- 
+        [HttpPost]
+        public IActionResult CreateEvent()
+        {
+            return RedirectToAction(nameof(HomeController.Index));
+        }
 
         public IActionResult Error()
         {

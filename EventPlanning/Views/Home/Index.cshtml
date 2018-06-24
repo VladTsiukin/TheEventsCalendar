@@ -43,36 +43,38 @@
                 </button>
             </div>
             <div class="modal-body">
-                @* INPUT NAME *@
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
+                <form asp-action="CreateEvent" asp-controller="Home" method="post">
+                    @* INPUT NAME *@
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                     </div>
-                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                </div>
-                @* INPUT DATE *@
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
+                    @* INPUT DATE *@
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
+                        </div>
+                        <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                     </div>
-                    <input type="date" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                </div>
-                @* INPUT NUMBER *@
-                <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Количество участников</span>
+                    @* INPUT NUMBER *@
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Количество участников</span>
+                        </div>
+                        <input type="number" min="0" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                     </div>
-                    <input type="number" min="0" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                </div>
-                @* BUTTON ADD FIELD *@
-                <button id="addField" type="button" class="btn btn-primary btn-sm mb-3">
-                    <i class="fas fa-plus">Добавить Поле</i>
-                </button>
+                    @* BUTTON ADD FIELD *@
+                    <button id="addField" type="button" class="btn btn-primary btn-sm mb-3">
+                        <i class="fas fa-plus">Добавить Поле</i>
+                    </button>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary">Сохранить</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
