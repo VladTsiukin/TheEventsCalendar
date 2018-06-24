@@ -16,7 +16,6 @@ body {
     display: flex;
     flex-direction: column;
 }
-    
 
 footer {
     margin: auto auto 0 auto;
@@ -27,27 +26,47 @@ footer {
 }
 
 /* Datepicker */
-.datepicker,
-.table-condensed {
-    min-height: 100%;
+#datepicker, .datepicker, .datepicker-inline, .datepicker-days, .table-condensed {
     min-width: 100%;
+    min-height: 65vh;
 }
+
+.datepicker-days {
+    height: 65vh;
+}
+
+.datepicker table tr td.active:hover,
+.datepicker table tr td.active:hover:hover,
+.datepicker table tr td.active.disabled:hover,
+.datepicker table tr td.active.disabled:hover:hover,
+.datepicker table tr td.active:active,
+.datepicker table tr td.active:hover:active,
+.datepicker table tr td.active.disabled:active,
+.datepicker table tr td.active.disabled:hover:active,
+.datepicker table tr td.active.active,
+.datepicker table tr td.active:hover.active,
+.datepicker table tr td.active.disabled.active,
+.datepicker table tr td.active.disabled:hover.active,
+.datepicker table tr td.active.disabled,
+.datepicker table tr td.active:hover.disabled,
+.datepicker table tr td.active.disabled.disabled,
+.datepicker table tr td.active.disabled:hover.disabled,
+.datepicker table tr td.active[disabled],
+.datepicker table tr td.active:hover[disabled],
+.datepicker table tr td.active.disabled[disabled],
+.datepicker table tr td.active.disabled:hover[disabled] {
+    background-image: none;
+    background-color: #6C757D;
+    font-weight: normal;
+    color: white;
+    text-shadow: none;
+}
+/*---------------*/
 
 .container-fields {
-    
-}
-
-.events-field {
     width: 100%;
     height: 100%;
     background-color: $main-color;
-}
-
-.d-p-field {
-    background-color: $main-color;
-    display: flex;
-    flex-direction: column;
-    justify-content: initial;
 }
 
 .fa-calendar-plus {
@@ -57,3 +76,4 @@ footer {
 .fa-pen-square {
     font-size: 3.15rem;
 }
+

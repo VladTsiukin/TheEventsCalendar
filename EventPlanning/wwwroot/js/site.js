@@ -7,7 +7,11 @@
 $('#datepicker').datepicker({
     language: 'ru',
     todayHighlight: false,
-    todayBtn: true
+    todayBtn: true,
+    templates: {
+        leftArrow: '<i class="fas fa-arrow-circle-left"></i>',
+        rightArrow: '<i class="fas fa-arrow-circle-right"></i>'
+    }
 });
 
 

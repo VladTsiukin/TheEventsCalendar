@@ -3,24 +3,30 @@
 }
 
 <!-- main -->
-<div class="d-flex flex-row container-fields">
-    <div class="d-p-field mr-5">
-        <!-- datepicker -->
-        <div id="datepicker" data-date="@DateTime.Now.ToLocalTime().ToString()"></div>
-        <input type="hidden" id="my_hidden_input">
-        <!-- btns -->
-        <div class="btn-group">
-            <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModalLong">
-                <i class="fas fa-calendar-plus"></i>
-            </a>
-            <a class="nav-link" href="#">
-                <i class="fas fa-pen-square"></i>
-            </a>
-        </div>
-    </div>
-    <!-- event field -->
-    <div class="events-field">
-        <h4 class="text-center m-2 event-h4">Событие</h4>
+<div class="d-flex flex-column container-fields">
+    <!-- datepicker -->
+    <div id="datepicker" data-date="@DateTime.Now.ToLocalTime().ToString()"></div>
+    <!-- for datepicker -->
+    <input type="hidden" id="my_hidden_input">
+    <!-- btns -->
+    <div class="d-flex justify-content-center">
+        @{
+            if (User.IsInRole("admin"))
+            {
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModalLong">
+                    <i class="fas fa-calendar-plus"></i>
+                </a>
+            }
+            else
+            {
+                <a class="nav-link disabled" href="#">
+                    <i class="fas fa-calendar-plus"></i>
+                </a>
+            }
+        }
+        <a class="nav-link" href="#">
+            <i class="fas fa-pen-square"></i>
+        </a>
     </div>
 </div>
 
@@ -119,7 +125,7 @@
                 let innerFields = '<div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span></div><input data-field="1" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span></div><input data-field="2" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-append"> '
                     + '<a data-clear-name="' + fieldName + '" class="btn btn-sm btn-outline-danger" href="#">x</a></div>';
 
-                field = document.createElement('div');
+                const field = document.createElement('div');
                 field.setAttribute('id', fieldName);
                 field.classList.add('input-group');
                 field.classList.add('input-group-sm');
