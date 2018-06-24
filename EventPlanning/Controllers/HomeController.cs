@@ -9,19 +9,19 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace EventPlanning.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
-        [Authorize(Roles = "admin")]
-        public IActionResult Index()
+        //[Authorize(Roles = "admin")]
+        public IActionResult Index(bool isError = false)
         {
-            return View();
+            return View(isError);
         }
 
         [HttpPost]
         public IActionResult CreateEvent()
         {
-            return RedirectToAction(nameof(HomeController.Index));
+            return RedirectToAction(nameof(HomeController.Index), new { isError = true });
         }
 
         public IActionResult Error()

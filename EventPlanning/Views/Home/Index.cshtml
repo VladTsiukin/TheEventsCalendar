@@ -2,6 +2,18 @@
     ViewData["Title"] = "Home Page";
 }
 
+@model bool
+
+@if (Model)
+{
+    <div class="alert alert-danger">Произошла ошибка!</div>
+    <script type="text/javascript">
+            setTimeout(() => {
+                document.getElementsByClassName('alert')[0].remove();
+            }, 3000);
+    </script>
+}
+
 <!-- main -->
 <div class="d-flex flex-column container-fields">
     <!-- datepicker -->
@@ -97,7 +109,7 @@
 <script type="text/javascript">
 
     document.addEventListener('DOMContentLoaded', () => {
-        
+
         const addBtn = document.getElementById('addField');
         const modalFooter = document.getElementsByClassName('modal-footer')[0];
         // set new field via 'Closures'
