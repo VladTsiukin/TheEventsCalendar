@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EventPlanning.Models;
 using Microsoft.AspNetCore.Authorization;
+using EventPlanning.Models.EventsViewModels;
 
 namespace EventPlanning.Controllers
 {
@@ -13,15 +14,18 @@ namespace EventPlanning.Controllers
     public class HomeController : Controller
     {
         //[Authorize(Roles = "admin")]
-        public IActionResult Index(bool isError = false)
+        public IActionResult Index(CreateEventViewModel model = null)
         {
-            return View(isError);
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult CreateEvent()
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateEvent(CreateEventViewModel model)
         {
-            return RedirectToAction(nameof(HomeController.Index), new { isError = true });
+            model.IsError = true;
+
+            return RedirectToAction(nameof(HomeController.Index), model);
         }
 
         public IActionResult Error()

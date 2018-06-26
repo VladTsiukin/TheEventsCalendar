@@ -12,6 +12,8 @@ namespace EventPlanning.Data
     {
         public virtual DbSet<Event> Events { get; set; }
 
+        public virtual DbSet<Subscribers> Subscribers { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
