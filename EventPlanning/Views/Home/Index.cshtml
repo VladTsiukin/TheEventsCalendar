@@ -5,6 +5,12 @@
 
 @model CreateEventViewModel
 
+@using System.Security.Claims
+
+@{ 
+    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
 @if (Model.IsError)
 {
     <div class="alert alert-danger">Произошла ошибка! Попробуйте ввести данные снова.</div>
@@ -59,12 +65,13 @@
                 <form asp-action="CreateEvent" asp-controller="Home" method="post">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <input type="hidden" asp-for="DateOfCreation" value="@DateTimeOffset.Now" />
+                    <input type="hidden" asp-for="CreatorId" value="@userId" />
                     @* INPUT NAME *@
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
                         </div>
-                        <input asp-for="Name" class="form-control" aria-label="Small" 
+                        <input asp-for="Name" class="form-control" aria-label="Small"
                                aria-describedby="inputGroup-sizing-sm" placeholder="Введите название">
                     </div>
                     @* INPUT DATE *@
@@ -72,7 +79,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
                         </div>
-                        <input type="date" asp-for="EventDate" value="@DateTimeOffset.Now" class="form-control" 
+                        <input type="date" asp-for="EventDate" value="@DateTimeOffset.Now" class="form-control"
                                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* INPUT NUMBER *@
@@ -80,7 +87,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Количество участников</span>
                         </div>
-                        <input asp-for="AmountOfParticipants" min="0" class="form-control" aria-label="Small" 
+                        <input asp-for="AmountOfParticipants" min="0" class="form-control" aria-label="Small"
                                aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* BUTTON ADD FIELD *@
@@ -98,20 +105,7 @@
     </div>
 </div>
 
-@*<div class="input-group input-group-sm mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span>
-        </div>
-        <input data-field="1" asp-for="@Model.Content" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span>
-        </div>
-        <input data-field="2" asp-for="@Model.Content" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-        <div class="input-group-append">
-            <a class="btn btn-sm btn-outline-danger" href="#">x</a>
-        </div>
-    </div>*@
-
+<!-- js -->
 <script type="text/javascript">
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -151,10 +145,18 @@
             return function () {
                 fieldId = fieldId + 1;
                 let fieldName = 'field' + fieldId;
-                let innerFields = '<div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span></div>'
-                    + '<input name="Content[' + (fieldId - 1) + '].Name" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-prepend"><span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span></div>'
-                    + '<input name="Content[' + (fieldId - 1) +  '].Value" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"><div class="input-group-append"> '
-                    + '<a data-clear-name="' + fieldName + '" class="btn btn-sm btn-outline-danger" href="#">x</a></div>';
+                let innerFields =
+                    '<div class="input-group-prepend">'
+                    + '<span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span>'
+                    + '</div>'
+                    + '<input name="Content[' + (fieldId - 1) + '].Name" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
+                    + '<div class="input-group-prepend">'
+                    + '<span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span>'
+                    + '</div>'
+                    + '<input name="Content[' + (fieldId - 1) + '].Value" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
+                    + '<div class="input-group-append"> '
+                    + '<a data-clear-name="' + fieldName + '" class="btn btn-sm btn-outline-danger" href="#">x</a>'
+                    + '</div>';
 
                 const field = document.createElement('div');
                 field.setAttribute('id', fieldName);
@@ -182,7 +184,7 @@
 <style>
     /* validation */
     input:invalid {
-        box-shadow: 0 0 5px 1px red;
+        box-shadow: 0 0 1px 0 #E33545;
     }
 
     input:focus:invalid {

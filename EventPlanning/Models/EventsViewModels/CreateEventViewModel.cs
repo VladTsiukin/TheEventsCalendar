@@ -1,16 +1,15 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace EventPlanning.Models.EventsViewModels
 {
     public class CreateEventViewModel
     {
+        public string CreatorId { get; set; }
+
         [Required(ErrorMessage = "Поле 'Название' обязательно для заполнения")]
-        [MaxLength(256, ErrorMessage = "Название не должно превышать 50-ти символов!")]
+        [MaxLength(256, ErrorMessage = "Название не должно превышать 256-ти символов!")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Поле 'Количество участников' обязательно для заполнения")]

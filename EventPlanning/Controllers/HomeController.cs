@@ -7,13 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 using EventPlanning.Models;
 using Microsoft.AspNetCore.Authorization;
 using EventPlanning.Models.EventsViewModels;
+using EventPlanning.Data;
+using Newtonsoft.Json.Linq;
 
 namespace EventPlanning.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        //[Authorize(Roles = "admin")]
+        public HomeController(ApplicationDbContext context)
+        {
+            this._context = context;
+        }
+
+        private readonly ApplicationDbContext _context;
+
         public IActionResult Index(CreateEventViewModel model = null)
         {
             return View(model);
@@ -21,10 +29,29 @@ namespace EventPlanning.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateEvent(CreateEventViewModel model)
+        public async Task<IActionResult> CreateEvent(CreateEventViewModel model)
         {
-            model.IsError = true;
+            if (ModelState.IsValid)
+            {
+                int countContent = model.Content.Count();
 
+                Event newEvent = new Event
+                {
+                    AppUserId = model.CreatorId,
+                    Name = model.Name,
+                    AmountOfParticipants = model.AmountOfParticipants,
+                    DateOfCreation = model.DateOfCreation,
+                    EventDate = model.EventDate,
+                    Content = model.Content
+                };
+
+                await _context.Set<Event>().AddAsync(newEvent);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(HomeController.Index), model);
+            }
+
+            model.IsError = true;
             return RedirectToAction(nameof(HomeController.Index), model);
         }
 

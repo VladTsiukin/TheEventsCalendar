@@ -18,7 +18,7 @@ namespace EventPlanning.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        [MaxLength(256, ErrorMessage = "You can enter no more than 50 characters!")]
+        [MaxLength(256, ErrorMessage = "You can enter no more than 256 characters!")]
         public string Name { get; set; }
 
         [Required]
