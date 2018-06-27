@@ -1,0 +1,58 @@
+﻿<!-- modal error -->
+
+
+@if (TempData["TempDataProperty-OnError"] != null)
+{
+    if ((TempData["TempDataProperty-OnError"] as string) == "true")
+    {
+        <!-- success modal -->
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content d-flex align-items-center justify-content-center h-100">
+                    <div class="modal-header">
+                        <i class="far fa-check-circle text-info" style="font-size: 4rem;"></i>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-info text-center">Запрос успешно выполнен:)</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(() => {
+                $('#successModal').modal('show');
+            });
+        </script>
+    }
+    else
+    {
+        <!-- error modal -->
+        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content d-flex align-items-center justify-content-center h-100">
+                    <div class="modal-header">
+                        <i class="far fa-frown text-secondary" style="font-size: 4rem;"></i>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger text-center">Произошла ошибка!</p>
+                        <p class="text-danger text-center">Попробуйте ввести данные снова.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(() => {
+                $('#errorModal').modal('show');
+            });
+        </script>
+    }
+}
+

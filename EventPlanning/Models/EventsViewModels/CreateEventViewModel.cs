@@ -23,7 +23,6 @@ namespace EventPlanning.Models.EventsViewModels
        
         public Content[] Content { get; set; }
 
-        public bool IsError { get; set; } = false;
     }
 }
 

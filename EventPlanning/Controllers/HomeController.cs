@@ -22,9 +22,12 @@ namespace EventPlanning.Controllers
 
         private readonly ApplicationDbContext _context;
 
-        public IActionResult Index(CreateEventViewModel model = null)
+        [TempData]
+        public string OnError { get; set; } = null;
+
+        public IActionResult Index()
         {
-            return View(model);
+            return View();
         }
 
         [HttpPost]
@@ -48,11 +51,12 @@ namespace EventPlanning.Controllers
                 await _context.Set<Event>().AddAsync(newEvent);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(HomeController.Index), model);
+                OnError = "true";
+                return RedirectToAction(nameof(HomeController.Index));
             }
 
-            model.IsError = true;
-            return RedirectToAction(nameof(HomeController.Index), model);
+            OnError = "false";
+            return RedirectToAction(nameof(HomeController.Index));
         }
 
         public IActionResult Error()
