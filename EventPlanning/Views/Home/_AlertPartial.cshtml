@@ -1,9 +1,9 @@
 ﻿<!-- modal error -->
 
 
-@if (TempData["TempDataProperty-OnError"] != null)
+@if (TempData["TempDataProperty-NoError"] != null)
 {
-    if ((TempData["TempDataProperty-OnError"] as string) == "true")
+    if ((TempData["TempDataProperty-NoError"] as string) == "true")
     {
         <!-- success modal -->
         <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">

@@ -1,7 +1,6 @@
 ﻿/* site.js */
 'use strict';
 
-
 /*-------------------- DATEPICKER ------------------*/
 
 $('#datepicker').datepicker({
@@ -14,12 +13,10 @@ $('#datepicker').datepicker({
     }
 });
 
-
 $('#datepicker').on('changeDate', function () {
     
 });
 /*------------------------------------------------- */
-
 
 /* Container d-picker */
 $('.container-fields').height(($(document).height() - 180));
@@ -30,4 +27,12 @@ $('#d-picker-btn').click((e) => {
     el.textContent = $('#datepicker').datepicker('getFormattedDate');
      $('.event-h4').after(el);      
 });
+
+/* disable button popover  */
+$('#disabledBtn').popover();
+
+/* enable ttoltips */
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
 

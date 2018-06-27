@@ -23,7 +23,7 @@ namespace EventPlanning.Controllers
         private readonly ApplicationDbContext _context;
 
         [TempData]
-        public string OnError { get; set; } = null;
+        public string NoError { get; set; } = null;
 
         public IActionResult Index()
         {
@@ -51,11 +51,11 @@ namespace EventPlanning.Controllers
                 await _context.Set<Event>().AddAsync(newEvent);
                 await _context.SaveChangesAsync();
 
-                OnError = "true";
+                NoError = "true";
                 return RedirectToAction(nameof(HomeController.Index));
             }
 
-            OnError = "false";
+            NoError = "false";
             return RedirectToAction(nameof(HomeController.Index));
         }
 
