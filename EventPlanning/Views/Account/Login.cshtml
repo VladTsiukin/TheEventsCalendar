@@ -39,14 +39,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-outline-primary">Войти</button>
+                    <button type="submit" class="btn btn-outline-info">Войти</button>
                 </div>
                 <div class="form-group">
                     <p>
-                        <a asp-action="ForgotPassword">Забыли пароль?</a>
+                        <a class="badge badge-secondary" asp-action="ForgotPassword">Забыли пароль?</a>
                     </p>
                     <p>
-                        <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">
+                        <a class="badge badge-secondary" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">
                             Зарегистртровать нового пользователя?
                         </a>
                     </p>

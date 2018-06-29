@@ -37,7 +37,12 @@ namespace EventPlanning.Controllers
         {
             //NoError = "false";
             _logger.LogInformation("CREATE EVENT METHOD SUCCESS. Model => {0}", model);
-            return Json(model);
+            //return Json(model);
+            return Ok( new
+            {
+                Error = "CreateEvent([FromForm] CreateEventViewModel model) FAIL",
+                IDModel = model.CreatorId
+            });
 
             if (ModelState.IsValid)
             {

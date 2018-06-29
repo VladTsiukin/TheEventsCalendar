@@ -33,7 +33,7 @@
         @{
             if (User.IsInRole("admin"))
             {
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModalLong">
+                <a class="btn btn-outline-info mr-1" href="#" data-toggle="modal" data-target="#exampleModalLong">
                     <i class="fas fa-calendar-plus" data-toggle="tooltip"
                        data-placement="top" title="Создать событие">
                     </i>
@@ -41,15 +41,15 @@
             }
             else
             {
-                <span id="disabledBtn" class="d-inline-block" data-toggle="popover" data-content="Нет прав доступа">
-                    <a class="nav-link disabled" href="#" style="pointer-events: none;">
+                <span id="disabledBtn" class="d-inline-block mr-1" data-toggle="popover" data-content="Нет прав доступа">
+                    <a class="btn btn-outline-info disabled" href="#" style="pointer-events: none;">
                         <i class="fas fa-calendar-plus"></i>
                     </a>
                 </span>
 
             }
         }
-        <a class="nav-link" href="#">
+        <a class="btn btn-outline-info ml-1" href="#">
             <i class="fas fa-pen-square" data-toggle="tooltip" data-placement="top"
                title="Подписаться на событие"></i>
         </a>
@@ -128,19 +128,18 @@
             const submitBtn = document.getElementById('submitBtn');
             const addBtn = document.getElementById('addField');
             const modalFooter = document.getElementsByClassName('modal-footer')[0];
-            const eventForm = document.getElementById('createEventForm');
 
             // submit
             submitBtn.addEventListener('click', (event) => {
                 event.preventDefault();
-                const eventData = new FormData(eventForm);
-                const token = document.getElementById('RequestVerificationToken').value;
-                const url = '@Url.Action("CreateEvent", "Home")';
                 const $eventForm = $('#createEventForm');
 
                 if ($eventForm.valid()) {
                     submitBtn.disabled = true;
-
+                    const eventData = new FormData($eventForm[0]);
+                    const token = document.getElementById('RequestVerificationToken').value;
+                    const url = '@Url.Action("CreateEvent", "Home")';
+                    
                     sendPromiseEvent(url, eventData, token)
                         .then((res) => {
                             console.info(res);
@@ -153,7 +152,27 @@
                 }
             });
 
-            // close modal window
+            // send promise xhr request
+            function sendPromiseEvent(url, data, token) {
+                return new Promise((resolve, reject) => { 
+                    const xhr = new XMLHttpRequest();                  
+                    xhr.open('POST', url);
+                    xhr.setRequestHeader('RequestVerificationToken', token);
+                    xhr.onload = () => {
+                        if (xhr.status == 200) {
+                            resolve(xhr.response);
+                        } else {
+                            reject(xhr.response);
+                        }
+                    };
+                    xhr.onerror = () => {
+                        reject(xhr.response);
+                    };
+                    xhr.send(data);
+                });
+            }
+
+                        // close modal window
             function closeModal(isError) {
                 submitBtn.disabled = false;
 
@@ -164,26 +183,6 @@
                     $('#exampleModalLong').modal('hide');
                     $('#successModal').modal('show');
                 }
-            }
-
-            // send promise xhr request
-            function sendPromiseEvent(url, data, token) {
-                return new Promise((resolve, reject) => { 
-                    const xhr = new XMLHttpRequest();                  
-                    xhr.open('POST', url);
-                    xhr.setRequestHeader('RequestVerificationToken', token);
-                    xhr.onload = () => {
-                        if (xhr.status === 200) {
-                            resolve(xhr.response);
-                        } else {
-                            reject(xhr.statusText);
-                        }
-                    };
-                    xhr.onerror = (e) => {
-                        reject(xhr.statusText);
-                    };
-                    xhr.send(data);
-                });
             }
 
             // set new field via 'Closures'
