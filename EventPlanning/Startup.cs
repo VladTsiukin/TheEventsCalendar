@@ -77,6 +77,9 @@ namespace EventPlanning
                     options.Conventions.AuthorizeFolder("/Account/Manage");
                     options.Conventions.AuthorizePage("/Account/Logout");
                 });
+
+            // add XSRF-TOKEN
+            services.AddAntiforgery(op => op.HeaderName = "RequestVerificationToken");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

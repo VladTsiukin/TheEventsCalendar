@@ -6,9 +6,20 @@
 @model CreateEventViewModel
 
 @using System.Security.Claims
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+
+<input type="hidden" id="RequestVerificationToken"
+       name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 
 @{
-    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    string userId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <!-- main -->
@@ -23,7 +34,7 @@
             if (User.IsInRole("admin"))
             {
                 <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModalLong">
-                    <i class="fas fa-calendar-plus" data-toggle="tooltip" 
+                    <i class="fas fa-calendar-plus" data-toggle="tooltip"
                        data-placement="top" title="Создать событие">
                     </i>
                 </a>
@@ -35,7 +46,7 @@
                         <i class="fas fa-calendar-plus"></i>
                     </a>
                 </span>
-                
+
             }
         }
         <a class="nav-link" href="#">
@@ -58,7 +69,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form asp-action="CreateEvent" asp-controller="Home" method="post">
+                <form id="createEventForm">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <input type="hidden" asp-for="DateOfCreation" value="@DateTimeOffset.Now" />
                     <input type="hidden" asp-for="CreatorId" value="@userId" />
@@ -75,7 +86,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
                         </div>
-                        <input type="date" asp-for="EventDate" value="@DateTimeOffset.Now" class="form-control"
+                        <input type="date" asp-for="EventDate" value="@DateTimeOffset.Now.ToString("yyyy-MM-dd")" class="form-control"
                                aria-label="Small" aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* INPUT NUMBER *@
@@ -93,7 +104,9 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                        <button id="submitBtn" type="submit" class="btn btn-primary">Создать</button>
+                        <button id="submitBtn" type="submit" class="btn btn-primary">
+                            Создать
+                        </button>
                     </div>
                 </form>
             </div>
@@ -101,93 +114,142 @@
     </div>
 </div>
 
-<!-- js -->
-<script type="text/javascript">
-
-    document.addEventListener('DOMContentLoaded', () => {
-
-        const submitBtn = document.getElementById('submitBtn');
-        const addBtn = document.getElementById('addField');
-        const modalFooter = document.getElementsByClassName('modal-footer')[0];
-        //const form = document.getElementsByTagName('form')[0];
-
-        // submit
-        submitBtn.addEventListener('click', (e) => {
-            //$.validator.unobtrusive.parse(form);
-            console.info("click submit!");
-        });
-
-        // set new field via 'Closures'
-        const setField = createField();
-
-        // add field
-        addBtn.addEventListener('click', () => {
-            modalFooter.insertAdjacentElement('beforebegin', setField());
-        });
-
-        // delete field
-        document.addEventListener('click', (e) => {
-            if (!e.target.hasAttribute('data-clear-name')) {
-                return;
-            }
-
-            let name = e.target.getAttribute('data-clear-name');
-            deleteFieldViaAttribute(name);
-        });
-
-        // create new field
-        function createField() {
-            let fieldId = 0;
-            return function () {
-                fieldId = fieldId + 1;
-                let fieldName = 'field' + fieldId;
-                let innerFields =
-                    '<div class="input-group-prepend">'
-                    + '<span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span>'
-                    + '</div>'
-                    + '<input name="Content[' + (fieldId - 1) + '].Name" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
-                    + '<div class="input-group-prepend">'
-                    + '<span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span>'
-                    + '</div>'
-                    + '<input name="Content[' + (fieldId - 1) + '].Value" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
-                    + '<div class="input-group-append"> '
-                    + '<a data-clear-name="' + fieldName + '" class="btn btn-sm btn-outline-danger" href="#">x</a>'
-                    + '</div>';
-
-                const field = document.createElement('div');
-                field.setAttribute('id', fieldName);
-                field.classList.add('input-group');
-                field.classList.add('input-group-sm');
-                field.classList.add('mb-3');
-                field.innerHTML = innerFields;
-                return field;
-            }
-        }
-
-        // delete field via attribute name
-        function deleteFieldViaAttribute(name) {
-            document.getElementById(name).remove();
-        }
-
-    });
-
-</script>
 
 @section Scripts {
-    @await Html.PartialAsync("_AlertPartial", TempData["TempDataProperty-NoError"])
+    <!-- js -->
+    @await Html.PartialAsync("_AlertPartial")
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            var eventDate;
+            const submitBtn = document.getElementById('submitBtn');
+            const addBtn = document.getElementById('addField');
+            const modalFooter = document.getElementsByClassName('modal-footer')[0];
+            const eventForm = document.getElementById('createEventForm');
+
+            // submit
+            submitBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                const eventData = new FormData(eventForm);
+                const token = document.getElementById('RequestVerificationToken').value;
+                const url = '@Url.Action("CreateEvent", "Home")';
+                const $eventForm = $('#createEventForm');
+
+                if ($eventForm.valid()) {
+                    submitBtn.disabled = true;
+
+                    sendPromiseEvent(url, eventData, token)
+                        .then((res) => {
+                            console.info(res);
+                            closeModal(false);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            closeModal(true);
+                        });
+                }
+            });
+
+            // close modal window
+            function closeModal(isError) {
+                submitBtn.disabled = false;
+
+                if (isError) {
+                    $('#exampleModalLong').modal('hide');
+                    $('#errorModal').modal('show');
+                } else {
+                    $('#exampleModalLong').modal('hide');
+                    $('#successModal').modal('show');
+                }
+            }
+
+            // send promise xhr request
+            function sendPromiseEvent(url, data, token) {
+                return new Promise((resolve, reject) => { 
+                    const xhr = new XMLHttpRequest();                  
+                    xhr.open('POST', url);
+                    xhr.setRequestHeader('RequestVerificationToken', token);
+                    xhr.onload = () => {
+                        if (xhr.status === 200) {
+                            resolve(xhr.response);
+                        } else {
+                            reject(xhr.statusText);
+                        }
+                    };
+                    xhr.onerror = (e) => {
+                        reject(xhr.statusText);
+                    };
+                    xhr.send(data);
+                });
+            }
+
+            // set new field via 'Closures'
+            const setField = createField();
+
+            // add field
+            addBtn.addEventListener('click', () => {
+                modalFooter.insertAdjacentElement('beforebegin', setField());
+            });
+
+            // delete field
+            document.addEventListener('click', (e) => {
+                if (!e.target.hasAttribute('data-clear-name')) {
+                    return;
+                }
+
+                let name = e.target.getAttribute('data-clear-name');
+                deleteFieldViaAttribute(name);
+            });
+
+            // create new field
+            function createField() {
+                let fieldId = 0;
+                return function () {
+                    fieldId = fieldId + 1;
+                    let fieldName = 'field' + fieldId;
+                    let innerFields =
+                        '<div class="input-group-prepend">'
+                        + '<span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span>'
+                        + '</div>'
+                        + '<input name="Content[' + (fieldId - 1) + '].Name" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
+                        + '<div class="input-group-prepend">'
+                        + '<span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span>'
+                        + '</div>'
+                        + '<input name="Content[' + (fieldId - 1) + '].Value" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
+                        + '<div class="input-group-append"> '
+                        + '<a data-clear-name="' + fieldName + '" class="btn btn-sm btn-outline-danger" href="#">x</a>'
+                        + '</div>';
+
+                    const field = document.createElement('div');
+                    field.setAttribute('id', fieldName);
+                    field.classList.add('input-group');
+                    field.classList.add('input-group-sm');
+                    field.classList.add('mb-3');
+                    field.innerHTML = innerFields;
+                    return field;
+                }
+            }
+
+            // delete field via attribute name
+            function deleteFieldViaAttribute(name) {
+                document.getElementById(name).remove();
+            }
+
+        });
+
+    </script>
+
+    <style>
+        /* validation */
+        input:invalid {
+            box-shadow: 0 0 1px 0 #E33545;
+        }
+
+        input:focus:invalid {
+            outline: none;
+        }
+    </style>
 }
-
-<style>
-    /* validation */
-    input:invalid {
-        box-shadow: 0 0 1px 0 #E33545;
-    }
-
-    input:focus:invalid {
-        outline: none;
-    }
-</style>
-
-
-
