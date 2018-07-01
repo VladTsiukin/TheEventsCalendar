@@ -58,11 +58,8 @@ footer {
   height: 100%;
   background-color: #E3F2FD; }
 
-.fa-calendar-plus {
+.fa-calendar-plus, .fa-calendar-alt, .fa-pen-square {
   font-size: 3rem; }
-
-.fa-pen-square {
-  font-size: 3.15rem; }
 
 /* validation */
 input:invalid {

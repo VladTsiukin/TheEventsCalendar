@@ -46,13 +46,13 @@
 
             }
         }
-        <a class="btn btn-outline-info ml-1" href="#">
-            <i class="fas fa-pen-square" data-toggle="tooltip" data-placement="top"
-               title="Подписаться на событие"></i>
+        <a asp-action="AllEvents" asp-controller="Event" id="allEventsBtn" class="btn btn-outline-info ml-1">
+            <i class="fas fa-calendar-alt" data-toggle="tooltip" data-placement="top"
+               title="Посмотреть все события"></i>
         </a>
     </div>
 </div>
-<!-- Modal -->
+ @* Add event Modal *@
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -74,7 +74,7 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
                         </div>
                         <input asp-for="Name" class="form-control" aria-label="Small" required
-                               aria-describedby="inputGroup-sizing-sm" placeholder="Введите название">
+                               aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* INPUT DATE *@
                     <div class="input-group input-group-sm mb-3">
@@ -97,7 +97,7 @@
                         <i class="fas fa-plus"> Добавить Поле</i>
                     </button>
 
-                    <div class="modal-footer">
+                    <div class="modal-footer add-event-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                         <button id="submitBtn" type="submit" class="btn btn-primary">
                             Создать
@@ -111,22 +111,28 @@
 
 @section Scripts {
     <!-- js -->
-    @await Html.PartialAsync("_AlertPartial")
+    @await Html.PartialAsync("AlertPartial")
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
 
-            var eventDate;
             const submitBtn = document.getElementById('submitBtn');
             const addBtn = document.getElementById('addField');
-            const modalFooter = document.getElementsByClassName('modal-footer')[0];
+            const modalFooter = document.getElementsByClassName('add-event-footer')[0];
             const $eventForm = $('#createEventForm');
+            const allEventsBtn = document.getElementById('allEventsBtn');
+
+            // all events button
+            allEventsBtn.addEventListener('click', (event) => {
+                //event.preventDefault();
+               // $('#allEventsModal').modal('show');
+            });
 
             // submit
             submitBtn.addEventListener('click', (event) => {
-                event.preventDefault();       
-                
+                event.preventDefault();
+
                 if ($eventForm.valid()) {
                     submitBtn.disabled = true;
                     setIdByAscending();
@@ -210,7 +216,7 @@
                         + '<input name="Content[0].Name" class="form-control i-field" required>'
                         + '<input name="Content[0].Value" class="form-control i-field" required>'
                         + '<div class="input-group-append">'
-                        + '<a data-clear-name="'+ fieldName +'" class="btn btn-sm btn-outline-danger" href="#">x</a>'
+                        + '<a data-clear-name="'+ fieldName +'" class="btn btn-sm btn-outline-danger" href="#">&times;</a>'
                         + '</div>';
 
                     const field = document.createElement('div');
@@ -223,8 +229,8 @@
 
             // set id in by ascending
             function setIdByAscending() {
-                let idn = 0; 
-                let idv = 0; 
+                let idn = 0;
+                let idv = 0;
 
                 $('input[name^="Content[0]"]').each(function (i, el) {
                     if (el.getAttribute('name') == 'Content[0].Name') {
@@ -235,7 +241,7 @@
                         let v = 'Content[' + idv + '].Value';
                         el.setAttribute('name', v);
                         idv++;
-                    }         
+                    }
                 });
             }
 

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<EventPlanning.Models.EventsViewModels.EventViewModel>
+
+@{
+    ViewData["Title"] = "AllEventsView";
+}
+
+<h2>AllEventsView</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                AmountOfParticipants
+            </th>
+            <th>
+                DateOfCreation
+            </th>
+            <th>
+                EventDate
+            </th>                
+            <th>
+                Contents
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountOfParticipants)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfCreation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventDate)
+            </td>
+            <td>
+                @for (int i = 0; i < item.Content.Count(); i++)
+                {
+                    <p>@(item.Content[i].Name + ": " + item.Content[i].Value)</p>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

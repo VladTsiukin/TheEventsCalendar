@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using EventPlanning.Data;
 using EventPlanning.Models;
 using EventPlanning.Models.EventsViewModels;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace EventPlanning.Controllers
 {
@@ -71,6 +71,31 @@ namespace EventPlanning.Controllers
                 _logger.LogError("Fail to create a new Event in database.");
                 return StatusCode(500, new { error = "Error", Model = model });
             }
+        }
+
+        
+        public IActionResult AllEvents()
+        {
+            var model = _context.Events.ToList();
+
+            var events = getAllEvents(model);
+
+            return View(events);
+        }
+
+        private IEnumerable<EventViewModel> getAllEvents(List<Event> model)
+        {
+            return model.Select(e =>
+            {
+                return new EventViewModel
+                {
+                    Name = e.Name,
+                    AmountOfParticipants = e.AmountOfParticipants,
+                    DateOfCreation = e.DateOfCreation,
+                    EventDate = e.EventDate,
+                    Content = e.Content
+                };
+            });
         }
     }
 }
