@@ -6,8 +6,6 @@ namespace EventPlanning.Models.EventsViewModels
 {
     public class CreateEventViewModel
     {
-        public string CreatorId { get; set; }
-
         [Required(ErrorMessage = "Поле 'Название' обязательно для заполнения")]
         [MaxLength(256, ErrorMessage = "Название не должно превышать 256-ти символов!")]
         public string Name { get; set; }
@@ -22,7 +20,5 @@ namespace EventPlanning.Models.EventsViewModels
         public DateTimeOffset EventDate { get; set; }
        
         public Content[] Content { get; set; }
-
     }
 }
-

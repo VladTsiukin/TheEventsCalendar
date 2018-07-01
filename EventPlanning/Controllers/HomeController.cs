@@ -10,6 +10,8 @@ using EventPlanning.Models.EventsViewModels;
 using EventPlanning.Data;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace EventPlanning.Controllers
 {
@@ -17,14 +19,17 @@ namespace EventPlanning.Controllers
     public class HomeController : Controller
     {
         public HomeController(ApplicationDbContext context,
+                              UserManager<ApplicationUser> userManager,
                               ILogger<HomeController> logger)
         {
             this._context = context;
+            this._userManager = userManager;
             this._logger = logger;
         }
 
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public IActionResult Index()
         {
@@ -35,18 +40,23 @@ namespace EventPlanning.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateEvent([FromForm] CreateEventViewModel model)
         {
-            //NoError = "false";
-            _logger.LogInformation("CREATE EVENT METHOD SUCCESS. Model => {0}", model);
-            //return Json(model);
-            return Ok(model);
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                int countContent = model.Content.Count();
+                return BadRequest();
+            }
 
+            var userId = this.User?.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (userId == null)
+            {
+                throw new ApplicationException($"Unable to load current user ClaimTypes.NameIdentifier'.");
+            }
+            _logger.LogInformation("Get Current User ClaimTypes.NameIdentifier");
+
+            try
+            {
                 Event newEvent = new Event
                 {
-                    AppUserId = model.CreatorId,
+                    AppUserId = userId,
                     Name = model.Name,
                     AmountOfParticipants = model.AmountOfParticipants,
                     DateOfCreation = model.DateOfCreation,
@@ -57,12 +67,14 @@ namespace EventPlanning.Controllers
                 await _context.Set<Event>().AddAsync(newEvent);
                 await _context.SaveChangesAsync();
 
-                //NoError = "true";
-                return RedirectToAction(nameof(HomeController.Index));
+                _logger.LogInformation("Successful create a new Event in database");
+                return Ok(model);
             }
-
-            //NoError = "false";
-            return RedirectToAction(nameof(HomeController.Index));
+            catch (Exception)
+            {
+                _logger.LogError("Fail to create a new Event in database with userId = {0}", userId);
+                return StatusCode(500, new { error = "ERROR", UserId = userId });
+            }
         }
 
         public IActionResult Error()
