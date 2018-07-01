@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Главная страница";
 
 }
 
@@ -132,7 +132,7 @@
                     setIdByAscending();
                     const eventData = new FormData($eventForm[0]);
                     const token = document.getElementById('RequestVerificationToken').value;
-                    const url = '@Url.Action("CreateEvent", "Home")';
+                    const url = '@Url.Action("CreateEvent", "Event")';
 
                     sendPromiseEvent(url, eventData, token)
                         .then((res) => {
