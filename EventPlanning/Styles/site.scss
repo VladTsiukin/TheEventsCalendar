@@ -77,3 +77,11 @@ footer {
     font-size: 3.15rem;
 }
 
+/* validation */
+input:invalid {
+    border: 0.1em dotted red;
+}
+
+input:valid {
+    border: 0.1em groove green;
+}

@@ -14,21 +14,18 @@
         return Xsrf.GetAndStoreTokens(Context).RequestToken;
     }
 }
-
+@{ string userId = User?.FindFirstValue(ClaimTypes.NameIdentifier); }
+@* RequestVerificationToken *@
 <input type="hidden" id="RequestVerificationToken"
        name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 
-@{
-    string userId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
-}
-
-<!-- main -->
+@* MAIN MARKUP *@
 <div class="d-flex flex-column container-fields">
-    <!-- datepicker -->
+    @* datepicker *@
     <div id="datepicker" data-date="@DateTime.Now.ToLocalTime().ToString()"></div>
-    <!-- for datepicker -->
+    @* for datepicker *@
     <input type="hidden" id="my_hidden_input">
-    <!-- btns -->
+    @* btns *@
     <div class="d-flex justify-content-center">
         @{
             if (User.IsInRole("admin"))
@@ -55,7 +52,6 @@
         </a>
     </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -78,7 +74,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
                         </div>
-                        <input asp-for="Name" class="form-control" aria-label="Small"
+                        <input asp-for="Name" class="form-control" aria-label="Small" required
                                aria-describedby="inputGroup-sizing-sm" placeholder="Введите название">
                     </div>
                     @* INPUT DATE *@
@@ -86,15 +82,15 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
                         </div>
-                        <input type="date" asp-for="EventDate" value="@DateTimeOffset.Now.ToString("yyyy-MM-dd")" class="form-control"
-                               aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                        <input type="datetime-local" asp-for="EventDate" value="@DateTimeOffset.Now.ToString("yyyy-MM-ddThh:mm")" class="form-control"
+                               aria-label="Small" required aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* INPUT NUMBER *@
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Количество участников</span>
                         </div>
-                        <input asp-for="AmountOfParticipants" min="0" class="form-control" aria-label="Small"
+                        <input asp-for="AmountOfParticipants" required min="0" class="form-control" aria-label="Small"
                                aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* BUTTON ADD FIELD *@
@@ -114,36 +110,36 @@
     </div>
 </div>
 
-
 @section Scripts {
     <!-- js -->
     @await Html.PartialAsync("_AlertPartial")
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script type="text/javascript">
-
         document.addEventListener('DOMContentLoaded', () => {
 
             var eventDate;
             const submitBtn = document.getElementById('submitBtn');
             const addBtn = document.getElementById('addField');
             const modalFooter = document.getElementsByClassName('modal-footer')[0];
+            const $eventForm = $('#createEventForm');
 
             // submit
             submitBtn.addEventListener('click', (event) => {
-                event.preventDefault();
-                const $eventForm = $('#createEventForm');
-
+                event.preventDefault();       
+                
                 if ($eventForm.valid()) {
                     submitBtn.disabled = true;
+                    setIdByAscending();
                     const eventData = new FormData($eventForm[0]);
                     const token = document.getElementById('RequestVerificationToken').value;
                     const url = '@Url.Action("CreateEvent", "Home")';
-                    
+
                     sendPromiseEvent(url, eventData, token)
                         .then((res) => {
                             console.info(res);
                             closeModal(false);
+                            $eventForm.trigger("reset");
                         })
                         .catch((error) => {
                             console.error(error);
@@ -154,8 +150,8 @@
 
             // send promise xhr request
             function sendPromiseEvent(url, data, token) {
-                return new Promise((resolve, reject) => { 
-                    const xhr = new XMLHttpRequest();                  
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
                     xhr.open('POST', url);
                     xhr.setRequestHeader('RequestVerificationToken', token);
                     xhr.onload = () => {
@@ -172,7 +168,7 @@
                 });
             }
 
-                        // close modal window
+            // close modal window
             function closeModal(isError) {
                 submitBtn.disabled = false;
 
@@ -205,31 +201,43 @@
 
             // create new field
             function createField() {
-                let fieldId = 0;
+                var fieldId = 0;
                 return function () {
                     fieldId = fieldId + 1;
                     let fieldName = 'field' + fieldId;
-                    let innerFields =
-                        '<div class="input-group-prepend">'
-                        + '<span class="input-group-text" id="inputGroup-sizing-sm">Название поля</span>'
-                        + '</div>'
-                        + '<input name="Content[' + (fieldId - 1) + '].Name" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
-                        + '<div class="input-group-prepend">'
-                        + '<span class="input-group-text" id="inputGroup-sizing-sm">Значение поля</span>'
-                        + '</div>'
-                        + '<input name="Content[' + (fieldId - 1) + '].Value" required class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">'
-                        + '<div class="input-group-append"> '
-                        + '<a data-clear-name="' + fieldName + '" class="btn btn-sm btn-outline-danger" href="#">x</a>'
+
+                    let innerFields = '<div class="input-group-prepend">'
+                        + '<span class="input-group-text" id="">Название/Значение</span></div>'
+                        + '<input name="Content[0].Name" class="form-control i-field" required>'
+                        + '<input name="Content[0].Value" class="form-control i-field" required>'
+                        + '<div class="input-group-append">'
+                        + '<a data-clear-name="'+ fieldName +'" class="btn btn-sm btn-outline-danger" href="#">x</a>'
                         + '</div>';
 
                     const field = document.createElement('div');
                     field.setAttribute('id', fieldName);
-                    field.classList.add('input-group');
-                    field.classList.add('input-group-sm');
-                    field.classList.add('mb-3');
+                    field.classList.add('input-group', 'input-group-sm', 'mb-3');
                     field.innerHTML = innerFields;
                     return field;
                 }
+            }
+
+            // set id in by ascending
+            function setIdByAscending() {
+                let idn = 0; 
+                let idv = 0; 
+
+                $('input[name^="Content[0]"]').each(function (i, el) {
+                    if (el.getAttribute('name') == 'Content[0].Name') {
+                        let n = 'Content[' + idn + '].Name';
+                        el.setAttribute('name', n);
+                        idn++;
+                    } else {
+                        let v = 'Content[' + idv + '].Value';
+                        el.setAttribute('name', v);
+                        idv++;
+                    }         
+                });
             }
 
             // delete field via attribute name
@@ -238,17 +246,5 @@
             }
 
         });
-
     </script>
-
-    <style>
-        /* validation */
-        input:invalid {
-            box-shadow: 0 0 1px 0 #E33545;
-        }
-
-        input:focus:invalid {
-            outline: none;
-        }
-    </style>
 }
