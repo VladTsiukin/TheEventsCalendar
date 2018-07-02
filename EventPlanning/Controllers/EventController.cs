@@ -83,17 +83,15 @@ namespace EventPlanning.Controllers
             return View(events);
         }
 
-        private IEnumerable<EventViewModel> getAllEvents(List<Event> model)
+        private IEnumerable<AllEventViewModel> getAllEvents(List<Event> model)
         {
             return model.Select(e =>
             {
-                return new EventViewModel
+                return new AllEventViewModel
                 {
+                    Id = e.Id,
                     Name = e.Name,
-                    AmountOfParticipants = e.AmountOfParticipants,
-                    DateOfCreation = e.DateOfCreation,
-                    EventDate = e.EventDate,
-                    Content = e.Content
+                    EventDate = e.EventDate
                 };
             });
         }

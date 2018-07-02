@@ -81,8 +81,9 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
                         </div>
-                        <input type="datetime-local" asp-for="EventDate" value="@DateTimeOffset.Now.ToString("yyyy-MM-ddThh:mm")" class="form-control"
-                               aria-label="Small" required aria-describedby="inputGroup-sizing-sm">
+                        <input type="datetime-local" asp-for="EventDate" aria-label="Small" 
+                               value="" class="form-control"
+                                       required aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* INPUT NUMBER *@
                     <div class="input-group input-group-sm mb-3">
@@ -93,13 +94,13 @@
                                aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* BUTTON ADD FIELD *@
-                    <button id="addField" type="button" class="btn btn-primary btn-sm mb-3">
+                    <button id="addField" type="button" class="btn btn-outline-info btn-sm mb-3">
                         <i class="fas fa-plus"> Добавить Поле</i>
                     </button>
 
                     <div class="modal-footer add-event-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                        <button id="submitBtn" type="submit" class="btn btn-primary">
+                        <button id="submitBtn" type="submit" class="btn btn-outline-info">
                             Создать
                         </button>
                     </div>
@@ -123,6 +124,30 @@
             const $eventForm = $('#createEventForm');
             const allEventsBtn = document.getElementById('allEventsBtn');
 
+            // add event jquery
+            $('#datepicker').datepicker()
+                .on('changeDate', function (e) {
+                    setDate();
+                    $('#exampleModalLong').modal('show');  
+                });
+
+            // set date for the EventDate input
+            function setDateForEventDate(){
+                const date = new Date($('#datepicker').datepicker('getDate'));
+                let d = (date.getFullYear() + '-' + zeroPadded(date.getMonth() + 1) + '-' + zeroPadded(date.getDate()) + 'T00:00');
+                document.getElementById('EventDate').value = d;
+                console.log(date.toJSON().slice(0, 19));
+                console.log(d);
+            }
+
+            // for set date
+            function zeroPadded(val) {
+                if (val >= 10)
+                    return val;
+                else
+                    return '0' + val;
+            }
+
             // all events button
             allEventsBtn.addEventListener('click', (event) => {
                 //event.preventDefault();
@@ -132,6 +157,8 @@
             // submit
             submitBtn.addEventListener('click', (event) => {
                 event.preventDefault();
+
+                processingData();
 
                 if ($eventForm.valid()) {
                     submitBtn.disabled = true;

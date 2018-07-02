@@ -13,9 +13,7 @@ $('#datepicker').datepicker({
     }
 });
 
-$('#datepicker').on('changeDate', function () {
-    
-});
+
 /*------------------------------------------------- */
 
 /* Container d-picker */
