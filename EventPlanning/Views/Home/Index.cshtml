@@ -74,7 +74,10 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
                         </div>
                         <input asp-for="Name" class="form-control" aria-label="Small" required
-                               aria-describedby="inputGroup-sizing-sm">
+                               aria-describedby="inputGroup-sizing-sm" list="name-event">
+                        <datalist id="name-event">
+                            <option value="Amazing Event"></option>
+                        </datalist>
                     </div>
                     @* INPUT DATE *@
                     <div class="input-group input-group-sm mb-3">
@@ -91,7 +94,14 @@
                             <span class="input-group-text" id="inputGroup-sizing-sm">Количество участников</span>
                         </div>
                         <input asp-for="AmountOfParticipants" required min="0" class="form-control" aria-label="Small"
-                               aria-describedby="inputGroup-sizing-sm">
+                               aria-describedby="inputGroup-sizing-sm" list="numbers-participants">
+                        <datalist id="numbers-participants">
+                            <option value="0"></option>
+                            <option value="1"></option>
+                            <option value="100"></option>
+                            <option value="1000"></option>
+                            <option value="10000"></option>
+                        </datalist>
                     </div>
                     @* BUTTON ADD FIELD *@
                     <button id="addField" type="button" class="btn btn-outline-info btn-sm mb-3">
@@ -134,13 +144,31 @@
             const addBtn = document.getElementById('addField');
             const modalFooter = document.getElementsByClassName('add-event-footer')[0];
             const $eventForm = $('#createEventForm');
+            const todayBtn = document.querySelector('#datepicker>div>div.datepicker-days>table>tfoot>tr>th.today');
+
+            // today button event handler
+            todayBtn.addEventListener('click', (event) => {
+                setBgTd();
+            });
 
             // add event jquery
             $('#datepicker').datepicker()
-                .on('changeDate', function (e) {
+                .on('changeDate', function (e) {                    
                     setDateForEventDate();
                     $('#exampleModalLong').modal('show');  
                 });
+
+            // set background today
+            function setBgTd() {
+                $(document).ready(function () {
+                    const tDate = new Date();
+                    tDate.setHours(3, 0, 0, 0);
+                    let ml = tDate.getTime();
+                    const td =
+                        document.querySelector('.datepicker-days>table>tbody>tr>td.day[data-date="' + ml + '"]');
+                    td.style.backgroundColor = 'rgba(23, 162, 184, 0.5)';
+                });
+            }
 
             // set date for the EventDate input
             function setDateForEventDate(){
@@ -150,7 +178,7 @@
                 document.getElementById('EventDate').value = d;
             }
 
-            // for set date
+            // add zero to the digit if necessary
             function addZero(val) {
                 if (val >= 10) {
                     return val;

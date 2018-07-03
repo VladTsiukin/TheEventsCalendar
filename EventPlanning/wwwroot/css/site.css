@@ -52,6 +52,27 @@ footer {
   color: white;
   text-shadow: none; }
 
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover, .datepicker .prev:hover,
+.datepicker tfoot tr th {
+  background-color: #6c757d;
+  color: white; }
+
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover, .datepicker .prev:hover,
+.datepicker tfoot tr th:hover {
+  background-color: #5d646b; }
+
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover, .datepicker .prev:hover,
+.datepicker tfoot tr th:focus {
+  background-color: #51575c; }
+
+.datepicker .datepicker-switch:hover,
+.datepicker .next:hover, .datepicker .prev:hover,
+.datepicker tfoot tr th:active {
+  background-color: #51575c; }
+
 /*---------------*/
 .container-fields {
   width: 100%;
@@ -88,7 +109,7 @@ input:valid {
   box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.14), 0 1px 1px 1px rgba(0, 0, 0, 0.12), 0 1px 1px -1px rgba(0, 0, 0, 0.2); }
 
 .shadow:hover {
-  font-size: 2.62rem;
+  font-size: 2.61rem;
   text-shadow: 2px 4px 1px rgba(0, 0, 0, 0.14);
   -webkit-box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2);
   box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2); }
@@ -97,7 +118,7 @@ input:valid {
   background-color: #6c757d; }
 
 /* Add Zoom Animation */
-.animate {
+.animate-zoom {
   -webkit-animation: animatezoom 0.6s;
   animation: animatezoom 0.6s; }
 
