@@ -38,7 +38,7 @@
             }
             else
             {
-                <span id="disabledBtn" class="d-inline-block mr-1" data-toggle="popover" data-content="Нет прав доступа">
+                <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="Нет прав доступа">
                     <a class="btn btn-outline-info disabled" href="#" style="pointer-events: none;">
                         <i class="fas fa-calendar-plus"></i>
                     </a>
@@ -100,9 +100,21 @@
 
                     <div class="modal-footer add-event-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                        <button id="submitBtn" type="submit" class="btn btn-outline-info">
-                            Создать
-                        </button>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <button id="submitBtn" type="submit" class="btn btn-outline-info">
+                                Создать
+                            </button>
+                        }
+                        else
+                        {
+                            <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="Нет прав доступа">
+                                <a class="btn btn-outline-info disabled" href="#" style="pointer-events: none;">
+                                    Создать
+                                </a>
+                            </span>
+                        }
+
                     </div>
                 </form>
             </div>
@@ -122,7 +134,6 @@
             const addBtn = document.getElementById('addField');
             const modalFooter = document.getElementsByClassName('add-event-footer')[0];
             const $eventForm = $('#createEventForm');
-            const allEventsBtn = document.getElementById('allEventsBtn');
 
             // add event jquery
             $('#datepicker').datepicker()
@@ -134,52 +145,46 @@
             // set date for the EventDate input
             function setDateForEventDate(){
                 const date = new Date($('#datepicker').datepicker('getDate'));
-                let d = (date.getFullYear() + '-' + zeroPadded(date.getMonth() + 1) + '-' + zeroPadded(date.getDate()) + 'T00:00');
+                let d = (date.getFullYear() + '-' + addZero(date.getMonth() + 1) +
+                                        '-' + addZero(date.getDate()) + 'T00:00');
                 document.getElementById('EventDate').value = d;
-                console.log(date.toJSON().slice(0, 19));
-                console.log(d);
             }
 
             // for set date
-            function zeroPadded(val) {
-                if (val >= 10)
+            function addZero(val) {
+                if (val >= 10) {
                     return val;
-                else
+                } else {
                     return '0' + val;
+                };                  
             }
 
-            // all events button
-            allEventsBtn.addEventListener('click', (event) => {
-                //event.preventDefault();
-               // $('#allEventsModal').modal('show');
-            });
-
             // submit
-            submitBtn.addEventListener('click', (event) => {
-                event.preventDefault();
+            if (submitBtn != null) {
+                 submitBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
 
-                processingData();
+                    if ($eventForm.valid()) {
+                        submitBtn.disabled = true;
+                        setIdByAscending();
+                        const eventData = new FormData($eventForm[0]);
+                        const token = document.getElementById('RequestVerificationToken').value;
+                        const url = '@Url.Action("CreateEvent", "Event")';
 
-                if ($eventForm.valid()) {
-                    submitBtn.disabled = true;
-                    setIdByAscending();
-                    const eventData = new FormData($eventForm[0]);
-                    const token = document.getElementById('RequestVerificationToken').value;
-                    const url = '@Url.Action("CreateEvent", "Event")';
-
-                    sendPromiseEvent(url, eventData, token)
-                        .then((res) => {
-                            console.info(res);
-                            closeModal(false);
-                            $eventForm.trigger("reset");
-                        })
-                        .catch((error) => {
-                            console.error(error);
-                            closeModal(true);
-                        });
-                }
-            });
-
+                        sendPromiseEvent(url, eventData, token)
+                            .then((res) => {
+                                console.info(res);
+                                closeModal(false);
+                                $eventForm.trigger("reset");
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                closeModal(true);
+                            });
+                    }
+                });
+            }
+           
             // send promise xhr request
             function sendPromiseEvent(url, data, token) {
                 return new Promise((resolve, reject) => {
@@ -202,8 +207,10 @@
 
             // close modal window
             function closeModal(isError) {
-                submitBtn.disabled = false;
-
+                if (submitBtn != null) {
+                    submitBtn.disabled = false;
+                }
+                
                 if (isError) {
                     $('#exampleModalLong').modal('hide');
                     $('#errorModal').modal('show');

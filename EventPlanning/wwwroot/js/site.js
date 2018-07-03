@@ -27,7 +27,7 @@ $('#d-picker-btn').click((e) => {
 });
 
 /* disable button popover  */
-$('#disabledBtn').popover();
+$('span.disabledSpan').popover();
 
 /* enable ttoltips */
 $(function () {
