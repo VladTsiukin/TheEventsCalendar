@@ -26,7 +26,7 @@
     @* for datepicker *@
     <input type="hidden" id="my_hidden_input">
     @* btns *@
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mt-2">
         @{
             if (User.IsInRole("admin"))
             {
@@ -144,12 +144,6 @@
             const addBtn = document.getElementById('addField');
             const modalFooter = document.getElementsByClassName('add-event-footer')[0];
             const $eventForm = $('#createEventForm');
-            const todayBtn = document.querySelector('#datepicker>div>div.datepicker-days>table>tfoot>tr>th.today');
-
-            // today button event handler
-            todayBtn.addEventListener('click', (event) => {
-                setBgTd();
-            });
 
             // add event jquery
             $('#datepicker').datepicker()
@@ -157,18 +151,6 @@
                     setDateForEventDate();
                     $('#exampleModalLong').modal('show');  
                 });
-
-            // set background today
-            function setBgTd() {
-                $(document).ready(function () {
-                    const tDate = new Date();
-                    tDate.setHours(3, 0, 0, 0);
-                    let ml = tDate.getTime();
-                    const td =
-                        document.querySelector('.datepicker-days>table>tbody>tr>td.day[data-date="' + ml + '"]');
-                    td.style.backgroundColor = 'rgba(23, 162, 184, 0.5)';
-                });
-            }
 
             // set date for the EventDate input
             function setDateForEventDate(){

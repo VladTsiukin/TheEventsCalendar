@@ -4,7 +4,10 @@
     ViewData["Title"] = "AllEventsView";
 }
 
-<h2 class="shadow"><strong>📅</strong> Все события</h2>
+<h2 class="shadow">
+    <a href="#" id="sideCalendarBtn" data-toggle="tooltip" data-target="top" title="Выбрать дату">📅</a> 
+    Все события
+</h2>
 
 <table class="table table-dark">
     <thead>
@@ -33,10 +36,44 @@
                 </td>
                 <td class="text-center">
                     <a class="btn btn-outline-light btn-sm" href="#">
-                        <i class="fas fa-binoculars"></i>
+                        <i class="fas fa-share"></i>
                     </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="sideNav" id="sideCalendar">
+    <div class="side-nav-content">
+        <button type="button" id="closeSideNav" class="close m-2" aria-label="Close">
+            <span aria-hidden="true" style="color: white;">&times;</span>
+        </button>
+        <div class="d-flex flex-column container-fields">
+            @* datepicker *@
+            <div id="datepicker" data-date="@DateTime.Now.ToLocalTime().ToString()"></div>
+            @* for datepicker *@
+            <input type="hidden" id="my_hidden_input">
+        </div>
+    </div>
+</div>
+
+@*  js  *@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidecalendar = document.getElementById('sideCalendar');
+        const closeSideNav = document.getElementById('closeSideNav');
+        const sideCalendarBtn = document.getElementById('sideCalendarBtn');
+
+        sideCalendarBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            sidecalendar.style.width = '22.5rem';
+        });
+
+        closeSideNav.addEventListener('click', (event) => {
+            event.preventDefault();
+            sideCalendar.style.width = '0px';
+        });
+
+    });
+</script>

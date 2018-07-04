@@ -13,6 +13,28 @@ $('#datepicker').datepicker({
     }
 });
 
+$(document).ready(function () {
+    const todayBtn = document.querySelector('#datepicker>div>div.datepicker-days>table>tfoot>tr>th.today');
+
+    // today button event handler
+    if (todayBtn != null) {
+        todayBtn.addEventListener('click', (event) => {
+            setBgTd();
+        });
+    }
+});
+
+// set background today
+function setBgTd() {
+    $(document).ready(function () {
+        const tDate = new Date();
+        tDate.setHours(3, 0, 0, 0);
+        let ml = tDate.getTime();
+        const td =
+            document.querySelector('.datepicker-days>table>tbody>tr>td.day[data-date="' + ml + '"]');
+        td.style.backgroundColor = 'rgba(23, 162, 184, 0.5)';
+    });
+}
 
 /*------------------------------------------------- */
 

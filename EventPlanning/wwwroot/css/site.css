@@ -142,3 +142,27 @@ input:valid {
   -webkit-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
   transform: rotate(-90deg); }
+
+/* side nav calendar */
+#sideCalendarBtn:hover {
+  cursor: pointer;
+  text-decoration: none; }
+
+#sideCalendarBtn:active {
+  font-size: xx-large; }
+
+.sideNav {
+  position: fixed;
+  background-color: #6c757d;
+  height: 100%;
+  width: 0;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  padding-top: 60px;
+  -webkit-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
+  overflow-x: hidden; }
+
+/* end */

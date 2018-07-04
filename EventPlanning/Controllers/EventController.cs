@@ -76,16 +76,14 @@ namespace EventPlanning.Controllers
         
         public IActionResult AllEvents()
         {
-            var model = _context.Events.ToList();
-
-            var events = getAllEvents(model);
+            var events = getAllEvents();
 
             return View(events);
         }
 
-        private IEnumerable<AllEventViewModel> getAllEvents(List<Event> model)
+        private IEnumerable<AllEventViewModel> getAllEvents()
         {
-            return model.Select(e =>
+            return _context.Events.ToList().Select(e =>
             {
                 return new AllEventViewModel
                 {
