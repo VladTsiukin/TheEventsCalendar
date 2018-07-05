@@ -143,13 +143,24 @@ public string GetXsrfToken()
             // create new tr
             function createNewTr(obj) {
                 const tr = document.createElement('tr');
+                const date = new Date(obj.eventDate);
+                date.getFullYear
                 tr.innerHTML = '<td>'+ obj.name +'</td>'
-                    + '<td class="text-center">' + new Date(obj.eventDate).toString() +'</td>'
+                    + '<td class="text-center">' + toDateRusString(date)
+                    + ' Время: ' + date.toLocaleTimeString('ru-RU', { hour12: false}) +'</td>'
                     +'<td class="text-center">'
                     +'<a class="btn btn-outline-light btn-sm" href="#"><i class="fas fa-share"></i>'
                     +'</a></td>';
 
                 return tr;
+            }
+
+            // to date string
+            function toDateRusString(d) {
+                let day = addZero(d.getDay() + 1);
+                let month = addZero(d.getMonth() + 1);
+                let year = d.getFullYear();
+                return (day + '-' + month + '-' + year).toString();
             }
 
             // get events by date from server

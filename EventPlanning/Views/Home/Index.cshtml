@@ -160,15 +160,6 @@
                 document.getElementById('EventDate').value = d;
             }
 
-            // add zero to the digit if necessary
-            function addZero(val) {
-                if (val >= 10) {
-                    return val;
-                } else {
-                    return '0' + val;
-                };                  
-            }
-
             // submit
             if (submitBtn != null) {
                  submitBtn.addEventListener('click', (event) => {
