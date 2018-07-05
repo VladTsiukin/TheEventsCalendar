@@ -72,7 +72,7 @@ public string GetXsrfToken()
 
 @*  js  *@
 @section Scripts {
-    @await Html.PartialAsync("AlertEventPartial")
+    @await Html.PartialAsync("_AlertPartial")
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -107,9 +107,9 @@ public string GetXsrfToken()
                             responseProcessing(res);
                         })
                         .catch((e) => {
+                            $('#errorModal').modal('show');
                             console.log(e);
                         });
-                    console.log(date);
                 });
 
             // response processing
@@ -122,8 +122,7 @@ public string GetXsrfToken()
                     createNewTbody(data);
 
                     console.log(data);
-                }
-                else {
+                } else {
                     $('#notDataModal').modal('show');
                     console.log(res);
                 }
@@ -144,20 +143,20 @@ public string GetXsrfToken()
             function createNewTr(obj) {
                 const tr = document.createElement('tr');
                 const date = new Date(obj.eventDate);
-                date.getFullYear
-                tr.innerHTML = '<td>'+ obj.name +'</td>'
+
+                tr.innerHTML = '<td>' + obj.name + '</td>'
                     + '<td class="text-center">' + toDateRusString(date)
-                    + ' Время: ' + date.toLocaleTimeString('ru-RU', { hour12: false}) +'</td>'
-                    +'<td class="text-center">'
-                    +'<a class="btn btn-outline-light btn-sm" href="#"><i class="fas fa-share"></i>'
-                    +'</a></td>';
+                    + ' Время: ' + date.toLocaleTimeString('ru-RU', { hour12: false }) + '</td>'
+                    + '<td class="text-center">'
+                    + '<a class="btn btn-outline-light btn-sm" href="#"><i class="fas fa-share"></i>'
+                    + '</a></td>';
 
                 return tr;
             }
 
             // to date string
             function toDateRusString(d) {
-                let day = addZero(d.getDay() + 1);
+                let day = addZero(d.getDate());
                 let month = addZero(d.getMonth() + 1);
                 let year = d.getFullYear();
                 return (day + '-' + month + '-' + year).toString();

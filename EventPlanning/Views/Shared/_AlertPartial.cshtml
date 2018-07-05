@@ -1,5 +1,4 @@
 ﻿<!-- modals -->
-
 @* success modal *@
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -27,6 +26,23 @@
             <div class="modal-body">
                 <p class="text-danger text-center">Произошла ошибка!</p>
                 <p class="text-danger text-center">Попробуйте ввести данные снова.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Data not found modal *@
+<div class="modal fade" id="notDataModal" tabindex="-1" role="dialog" aria-labelledby="notDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content d-flex align-items-center justify-content-center h-100">
+            <div class="modal-header">
+                <i class="fas fa-not-equal text-secondary" style="font-size: 4rem;"></i>
+            </div>
+            <div class="modal-body">
+                <p class="text-secondary text-center">По данной дате событий нет.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Ok</button>

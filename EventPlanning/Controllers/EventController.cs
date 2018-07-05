@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EventPlanning.Controllers
 {
     [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class EventController : Controller
     {
         public EventController(ApplicationDbContext context,
@@ -73,30 +74,16 @@ namespace EventPlanning.Controllers
             }
         }
 
-        
+        [HttpGet]
         public async Task<IActionResult> AllEvents()
         {
             var e = await _context.Events.ToArrayAsync();
-            var events = getAllEvents(e);
+            var events = getEventsModel(e);
 
             return View(events);
         }
 
-        private IEnumerable<AllEventViewModel> getAllEvents(IEnumerable<Event> events)
-        {
-            return events.Select(e =>
-            {
-                return new AllEventViewModel
-                {
-                    Id = e.Id,
-                    Name = e.Name,
-                    EventDate = e.EventDate
-                };
-            });
-        }
-
         [HttpGet]
-        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> GetEventsByDate(string date)
         {
             if (!string.IsNullOrEmpty(date))
@@ -111,7 +98,9 @@ namespace EventPlanning.Controllers
 
                     if (events.Count() > 0)
                     {
-                        return Ok(new { Result = "success", Events = events });
+                        var eventsModel = getEventsModel(events);
+
+                        return Ok(new { Result = "success", Events = eventsModel });
                     }
 
                     return StatusCode(200, new { Result = "data not found." });
@@ -119,8 +108,26 @@ namespace EventPlanning.Controllers
             }
 
             _logger.LogError("Fail to GetEventsByDate.");
-            return BadRequest(new { Result = "Error"});
+            return BadRequest(new { Result = "error"});
             
+        }
+
+        /// <summary>
+        /// Substituting event entities
+        /// </summary>
+        /// <param name="events"></param>
+        /// <returns></returns>
+        private IEnumerable<AllEventViewModel> getEventsModel(IEnumerable<Event> events)
+        {
+            return events.Select(e =>
+            {
+                return new AllEventViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    EventDate = e.EventDate
+                };
+            });
         }
     }
 }
