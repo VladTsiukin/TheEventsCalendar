@@ -150,11 +150,11 @@ input:valid {
 
 @keyframes animatezoom {
     from {
-        transform: scale(0)
+        transform: scale(0);
     }
 
     to {
-        transform: scale(1)
+        transform: scale(1);
     }
 }
 
@@ -186,10 +186,8 @@ input:valid {
     top: 0;
     left: 0;
     padding-top: 60px;
-    transition: 0.5s;
+    transition: all ease-in-out 0.5s;
     overflow-x: hidden;
+    opacity: 0;
 }
 /* end */
-
-
-

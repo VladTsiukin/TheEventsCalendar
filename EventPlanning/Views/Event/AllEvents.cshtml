@@ -4,8 +4,20 @@
     ViewData["Title"] = "AllEventsView";
 }
 
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+@functions {
+public string GetXsrfToken()
+{
+    return Xsrf.GetAndStoreTokens(Context).RequestToken;
+}
+}
+
+<input type="hidden" name="RequestVarificationToken"
+       id="RequestVarificationToken" value="@GetXsrfToken()" />
+
 <h2 class="shadow">
-    <a href="#" id="sideCalendarBtn" data-toggle="tooltip" data-target="top" title="Выбрать дату">📅</a> 
+    <a href="#" id="sideCalendarBtn" data-toggle="tooltip" data-target="top" title="Выбрать дату">📅</a>
     Все события
 </h2>
 
@@ -46,7 +58,7 @@
 
 <div class="sideNav" id="sideCalendar">
     <div class="side-nav-content">
-        <button type="button" id="closeSideNav" class="close m-2" aria-label="Close">
+        <button type="button" id="closeSideBar" class="close m-2" aria-label="Close">
             <span aria-hidden="true" style="color: white;">&times;</span>
         </button>
         <div class="d-flex flex-column container-fields">
@@ -59,21 +71,112 @@
 </div>
 
 @*  js  *@
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sidecalendar = document.getElementById('sideCalendar');
-        const closeSideNav = document.getElementById('closeSideNav');
-        const sideCalendarBtn = document.getElementById('sideCalendarBtn');
+@section Scripts {
+    @await Html.PartialAsync("AlertEventPartial")
 
-        sideCalendarBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            sidecalendar.style.width = '22.5rem';
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sideCalendar = document.getElementById('sideCalendar');
+            const closeSideBar = document.getElementById('closeSideBar');
+            const sideCalendarBtn = document.getElementById('sideCalendarBtn');
+            const table = document.getElementsByTagName('table')[0];
+
+            // open sidebar
+            sideCalendarBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                sideCalendar.style.opacity = '1';
+                sideCalendar.style.width = '22.5rem';
+            });
+
+            // close sidebar
+            closeSideBar.addEventListener('click', (event) => {
+                event.preventDefault();
+                closeSidebar();
+            });
+
+            // choose date
+            $('#datepicker').datepicker()
+                .on('changeDate', function (e) {
+                    closeSidebar();
+                    const date = new Date($('#datepicker').datepicker('getDate'));
+                    const data = 'date=' + encodeURIComponent(date.toDateString());
+                    const url = '/Event/GetEventsByDate?' + data;
+
+                    getPromiseData(url)
+                        .then((res) => {
+                            responseProcessing(res);
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                        });
+                    console.log(date);
+                });
+
+            // response processing
+            function responseProcessing(res) {
+                const oldTbody = document.getElementsByTagName('tbody')[0];
+                let data = JSON.parse(res);
+                if (data.result == 'success') {
+
+                    oldTbody.remove();
+                    createNewTbody(data);
+
+                    console.log(data);
+                }
+                else {
+                    $('#notDataModal').modal('show');
+                    console.log(res);
+                }
+            }
+
+            // create new tbody
+            function createNewTbody(data) {
+                const newTbody = document.createElement('tbody');
+
+                for (var i = 0; i < data.events.length; i++) {
+                    newTbody.appendChild(createNewTr(data.events[i]));
+                }
+
+                table.appendChild(newTbody);
+            }
+
+            // create new tr
+            function createNewTr(obj) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td>'+ obj.name +'</td>'
+                    + '<td class="text-center">' + new Date(obj.eventDate).toString() +'</td>'
+                    +'<td class="text-center">'
+                    +'<a class="btn btn-outline-light btn-sm" href="#"><i class="fas fa-share"></i>'
+                    +'</a></td>';
+
+                return tr;
+            }
+
+            // get events by date from server
+            function getPromiseData(url) {
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', url);
+                    xhr.onload = () => {
+                        if (xhr.status == 200) {
+                            resolve(xhr.response);
+                        } else {
+                            reject(xhr.response);
+                        }
+                    };
+                    xhr.onerror = () => {
+                        reject(xhr.response);
+                    };
+                    xhr.send();
+                });
+            }
+
+            // close side bar
+            function closeSidebar() {
+                sideCalendar.style.opacity = '0';
+                sideCalendar.style.width = '0px';
+            }
         });
+    </script>
 
-        closeSideNav.addEventListener('click', (event) => {
-            event.preventDefault();
-            sideCalendar.style.width = '0px';
-        });
-
-    });
-</script>
+}

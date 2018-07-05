@@ -1,8 +1,7 @@
 ﻿/* site.js */
 'use strict';
 
-/*-------------------- DATEPICKER ------------------*/
-
+/* DATEPICKER */
 $('#datepicker').datepicker({
     language: 'ru',
     todayHighlight: false,
@@ -13,8 +12,16 @@ $('#datepicker').datepicker({
     }
 });
 
+/* set css */
 $(document).ready(function () {
     const todayBtn = document.querySelector('#datepicker>div>div.datepicker-days>table>tfoot>tr>th.today');
+    const tableCalendar = document.querySelector('#datepicker>div>div.datepicker-days>table');
+    const tableTr = document.querySelector('#datepicker>div>div.datepicker-days>table>thead>tr:nth-child(3)');
+
+    if (tableCalendar != null) {
+        tableCalendar.classList.add('table'); 
+        tableTr.classList.add('table-dark');
+    }
 
     // today button event handler
     if (todayBtn != null) {
@@ -35,8 +42,6 @@ function setBgTd() {
         td.style.backgroundColor = 'rgba(23, 162, 184, 0.5)';
     });
 }
-
-/*------------------------------------------------- */
 
 /* Container d-picker */
 $('.container-fields').height(($(document).height() - 180));

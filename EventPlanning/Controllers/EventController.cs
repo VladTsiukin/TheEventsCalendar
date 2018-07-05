@@ -74,16 +74,17 @@ namespace EventPlanning.Controllers
         }
 
         
-        public IActionResult AllEvents()
+        public async Task<IActionResult> AllEvents()
         {
-            var events = getAllEvents();
+            var e = await _context.Events.ToArrayAsync();
+            var events = getAllEvents(e);
 
             return View(events);
         }
 
-        private IEnumerable<AllEventViewModel> getAllEvents()
+        private IEnumerable<AllEventViewModel> getAllEvents(IEnumerable<Event> events)
         {
-            return _context.Events.ToList().Select(e =>
+            return events.Select(e =>
             {
                 return new AllEventViewModel
                 {
@@ -92,6 +93,34 @@ namespace EventPlanning.Controllers
                     EventDate = e.EventDate
                 };
             });
+        }
+
+        [HttpGet]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> GetEventsByDate(string date)
+        {
+            if (!string.IsNullOrEmpty(date))
+            {
+                DateTimeOffset d;
+                var resDate = DateTimeOffset.TryParse(date, out d);
+                if (resDate)
+                {
+                    var events = await _context.Events.Select(e => e)
+                        .Where(e => e.EventDate.Date == d.Date)
+                        .AsNoTracking().ToListAsync();
+
+                    if (events.Count() > 0)
+                    {
+                        return Ok(new { Result = "success", Events = events });
+                    }
+
+                    return StatusCode(200, new { Result = "data not found." });
+                }            
+            }
+
+            _logger.LogError("Fail to GetEventsByDate.");
+            return BadRequest(new { Result = "Error"});
+            
         }
     }
 }
