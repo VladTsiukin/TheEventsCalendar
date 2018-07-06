@@ -30,8 +30,8 @@
         @{
             if (User.IsInRole("admin"))
             {
-                <a class="btn btn-outline-info mr-1" href="#" data-toggle="modal" data-target="#exampleModalLong">
-                    <i class="fas fa-calendar-plus" data-toggle="tooltip"
+                <a class="btn btn-outline-main mr-1" href="#" data-toggle="modal" data-target="#exampleModalLong">
+                    <i class="fas fa-calendar-plus" data-toggle="tooltip";
                        data-placement="top" title="Создать событие">
                     </i>
                 </a>
@@ -39,14 +39,14 @@
             else
             {
                 <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="Нет прав доступа">
-                    <a class="btn btn-outline-info disabled" href="#" style="pointer-events: none;">
+                    <a class="btn btn-outline-main disabled" href="#" style="pointer-events: none;">
                         <i class="fas fa-calendar-plus"></i>
                     </a>
                 </span>
 
             }
         }
-        <a asp-action="AllEvents" asp-controller="Event" id="allEventsBtn" class="btn btn-outline-info ml-1">
+        <a asp-action="AllEvents" asp-controller="Event" id="allEventsBtn" class="btn btn-outline-main ml-1">
             <i class="fas fa-calendar-alt" data-toggle="tooltip" data-placement="top"
                title="Посмотреть все события"></i>
         </a>
@@ -104,7 +104,7 @@
                         </datalist>
                     </div>
                     @* BUTTON ADD FIELD *@
-                    <button id="addField" type="button" class="btn btn-outline-info btn-sm mb-3">
+                    <button id="addField" type="button" class="btn btn-outline-main btn-sm mb-3">
                         <i class="fas fa-plus"> Добавить Поле</i>
                     </button>
 
@@ -112,14 +112,14 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                         @if (User.IsInRole("admin"))
                         {
-                            <button id="submitBtn" type="submit" class="btn btn-outline-info">
+                            <button id="submitBtn" type="submit" class="btn btn-outline-main">
                                 Создать
                             </button>
                         }
                         else
                         {
                             <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="Нет прав доступа">
-                                <a class="btn btn-outline-info disabled" href="#" style="pointer-events: none;">
+                                <a class="btn btn-outline-main disabled" href="#" style="pointer-events: none;">
                                     Создать
                                 </a>
                             </span>

@@ -5,8 +5,9 @@
     @return #{$remSize}rem;
 }
 
-$main-color : #E3F2FD;
+$main-color: #E3F2FD;
 $secondary-color: #6c757d;
+$main-color-darker: #63bdff;
 
 html {
     height: 100%;
@@ -100,6 +101,8 @@ footer {
         margin: auto;
     }
 }
+
+
 
 /* buttons */
 .fa-calendar-plus, .fa-calendar-alt, .fa-pen-square {
@@ -198,5 +201,39 @@ input:valid {
     opacity: 0;
 }
 
-/* media */
+/* button */
+.btn-outline-main {
+    color: rgba(23, 162, 184, 0.5);
+    background-color: transparent;
+    background-image: none;
+    border-color: rgba(23, 162, 184, 0.5);
+}
 
+.btn-outline-main:hover {
+    color: #fff;
+    background-color: rgba(23, 162, 184, 0.5);
+    border-color: rgba(23, 162, 184, 0.5);
+}
+
+.btn-outline-main:focus, .btn-outline-main.focus {
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5);
+}
+
+.btn-outline-main.disabled, .btn-outline-main:disabled {
+    color: rgba(23, 162, 184, 0.5);
+    background-color: transparent;
+}
+
+.btn-outline-main:not(:disabled):not(.disabled):active, .btn-outline-main:not(:disabled):not(.disabled).active,
+.show > .btn-outline-main.dropdown-toggle {
+    color: #fff;
+    background-color: rgba(23, 162, 184, 0.5);
+    border-color: rgba(23, 162, 184, 0.5);
+}
+
+.btn-outline-main:not(:disabled):not(.disabled):active:focus, .btn-outline-main:not(:disabled):not(.disabled).active:focus,
+.show > .btn-outline-main.dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5);
+}
+
+/* --- */
