@@ -69,7 +69,7 @@ namespace EventPlanning.Controllers
             }
             catch (Exception)
             {
-                _logger.LogError("Fail to create a new Event in database.");
+                _logger.LogError("FAIL to create a new Event in database.");
                 return StatusCode(500, new { error = "Error", Model = model });
             }
         }
@@ -78,7 +78,7 @@ namespace EventPlanning.Controllers
         public async Task<IActionResult> AllEvents()
         {
             var e = await _context.Events.ToArrayAsync();
-            var events = getEventsModel(e);
+            var events = GetEventsModel(e);
 
             return View(events);
         }
@@ -98,36 +98,54 @@ namespace EventPlanning.Controllers
 
                     if (events.Count() > 0)
                     {
-                        var eventsModel = getEventsModel(events);
+                        var eventsModel = GetEventsModel(events);
 
-                        return Ok(new { Result = "success", Events = eventsModel });
+                        if (eventsModel != null)
+                        {
+                            return Ok(new { Result = "success", Events = eventsModel });
+                        }                       
                     }
-
-                    return StatusCode(200, new { Result = "data not found." });
+                    else
+                    {
+                        return StatusCode(200, new { Result = "data not found." });
+                    }                    
                 }            
             }
 
-            _logger.LogError("Fail to GetEventsByDate.");
-            return BadRequest(new { Result = "error"});
-            
+            _logger.LogError("FAIL to GetEventsByDate().");
+            return BadRequest(new { Result = "error"});            
         }
 
         /// <summary>
-        /// Substituting event entities
+        /// Substituting the events entities
         /// </summary>
         /// <param name="events"></param>
         /// <returns></returns>
-        private IEnumerable<AllEventViewModel> getEventsModel(IEnumerable<Event> events)
+        private IEnumerable<AllEventViewModel> GetEventsModel(IEnumerable<Event> events)
         {
-            return events.Select(e =>
+            try
             {
-                return new AllEventViewModel
+                if (events == null)
                 {
-                    Id = e.Id,
-                    Name = e.Name,
-                    EventDate = e.EventDate
-                };
-            });
+                    throw new NullReferenceException("The events can not be null.");
+                }
+
+                return events.Select(e =>
+                {
+                    return new AllEventViewModel
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        EventDate = e.EventDate
+                    };
+                });
+            }
+            catch (Exception)
+            {
+                _logger.LogError("FAIL to GetEventsModel().");
+                return null;
+            }
+
         }
     }
 }
