@@ -12,8 +12,11 @@ namespace EventPlanning.Models
         public ApplicationUser()
         {
             this.Events = new HashSet<Event>();
+            this.Subscribers = new HashSet<Subscribers>();
         }
 
         public virtual ICollection<Event> Events {get; set; }
+
+        public virtual ICollection<Subscribers> Subscribers { get; set; }
     }
 }

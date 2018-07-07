@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace EventPlanning.Data.Migrations
+namespace EventPlanning.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180621103018_AddEvent")]
-    partial class AddEvent
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,11 +76,18 @@ namespace EventPlanning.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("AmountOfParticipants")
+                        .HasMaxLength(10000000);
+
                     b.Property<string>("AppUserId");
+
+                    b.Property<DateTimeOffset>("DateOfCreation");
+
+                    b.Property<DateTimeOffset>("EventDate");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(256);
 
                     b.Property<string>("_Content")
                         .HasColumnName("Content");
@@ -90,7 +96,25 @@ namespace EventPlanning.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Event");
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("EventPlanning.Models.Subscribers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AppUserId");
+
+                    b.Property<int>("EventId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("Subscribers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -204,8 +228,20 @@ namespace EventPlanning.Data.Migrations
             modelBuilder.Entity("EventPlanning.Models.Event", b =>
                 {
                     b.HasOne("EventPlanning.Models.ApplicationUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Events")
                         .HasForeignKey("AppUserId");
+                });
+
+            modelBuilder.Entity("EventPlanning.Models.Subscribers", b =>
+                {
+                    b.HasOne("EventPlanning.Models.ApplicationUser", "AppUser")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("AppUserId");
+
+                    b.HasOne("EventPlanning.Models.Event", "Event")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

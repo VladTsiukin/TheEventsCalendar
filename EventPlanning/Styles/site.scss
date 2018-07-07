@@ -7,7 +7,6 @@
 
 $main-color: #E3F2FD;
 $secondary-color: #6c757d;
-$main-color-darker: #63bdff;
 
 html {
     height: 100%;
@@ -21,6 +20,10 @@ body {
 
 footer {
     margin: auto auto 0 auto;
+}
+
+.bg-main {
+    background-color: $main-color;
 }
 
 .mb-6 {
@@ -102,7 +105,11 @@ footer {
     }
 }
 
-
+@media (max-width: 360px) {
+    #datepicker {
+        margin-bottom: 2rem;
+    }
+}
 
 /* buttons */
 .fa-calendar-plus, .fa-calendar-alt, .fa-pen-square {

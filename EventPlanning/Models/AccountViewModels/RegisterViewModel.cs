@@ -9,8 +9,6 @@ namespace EventPlanning.Models.AccountViewModels
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "Поле обязательно для заполнения")]
-        [MinLength(3, ErrorMessage = "Роль должна быть не менее 3-х символов")]
-        [MaxLength(256, ErrorMessage = "Роль должна быть не более 256-ти символов")]
         [Display(Name = "Алиас (роль)")]
         public string Role { get; set; }
 

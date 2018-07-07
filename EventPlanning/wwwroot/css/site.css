@@ -15,6 +15,9 @@ body {
 footer {
   margin: auto auto 0 auto; }
 
+.bg-main {
+  background-color: #E3F2FD; }
+
 .mb-6 {
   margin-bottom: 6rem; }
 
@@ -82,6 +85,10 @@ footer {
   .container-fields {
     max-width: 720px;
     margin: auto; } }
+
+@media (max-width: 360px) {
+  #datepicker {
+    margin-bottom: 2rem; } }
 
 /* buttons */
 .fa-calendar-plus, .fa-calendar-alt, .fa-pen-square {

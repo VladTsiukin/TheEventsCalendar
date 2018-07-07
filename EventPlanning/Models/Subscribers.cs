@@ -6,13 +6,16 @@ namespace EventPlanning.Models
     public class Subscribers
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
-        public string SubscriberId { get; set; }
+        public string AppUserId { get; set; }
 
-        public string SubscriberEmail { get; set; }
+        public int EventId { get; set; }
 
-        [ForeignKey("SubscriberId")]
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("AppUserId")]
+        public ApplicationUser AppUser { get; set; }
+
+        [ForeignKey("EventId")]
+        public Event Event { get; set; }
     }
 }

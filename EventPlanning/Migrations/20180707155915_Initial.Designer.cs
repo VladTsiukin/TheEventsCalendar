@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace EventPlanning.Data.Migrations
+namespace EventPlanning.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180626090732_SubscribersChanges")]
-    partial class SubscribersChanges
+    [Migration("20180707155915_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -78,7 +78,7 @@ namespace EventPlanning.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AmountOfParticipants")
-                        .HasMaxLength(2147483647);
+                        .HasMaxLength(10000000);
 
                     b.Property<string>("AppUserId");
 
@@ -102,20 +102,18 @@ namespace EventPlanning.Data.Migrations
 
             modelBuilder.Entity("EventPlanning.Models.Subscribers", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("EventId");
+                    b.Property<string>("AppUserId");
 
-                    b.Property<string>("SubscriberEmail");
-
-                    b.Property<string>("SubscriberId");
+                    b.Property<int>("EventId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId");
+                    b.HasIndex("AppUserId");
 
-                    b.HasIndex("SubscriberId");
+                    b.HasIndex("EventId");
 
                     b.ToTable("Subscribers");
                 });
@@ -237,13 +235,14 @@ namespace EventPlanning.Data.Migrations
 
             modelBuilder.Entity("EventPlanning.Models.Subscribers", b =>
                 {
-                    b.HasOne("EventPlanning.Models.Event")
+                    b.HasOne("EventPlanning.Models.ApplicationUser", "AppUser")
                         .WithMany("Subscribers")
-                        .HasForeignKey("EventId");
+                        .HasForeignKey("AppUserId");
 
-                    b.HasOne("EventPlanning.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("SubscriberId");
+                    b.HasOne("EventPlanning.Models.Event", "Event")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

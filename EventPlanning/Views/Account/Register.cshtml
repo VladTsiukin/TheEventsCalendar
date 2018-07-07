@@ -11,11 +11,17 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Role"></label>
-                <input asp-for="Role" class="form-control" required
-                       data-val-required="Поле 'Роль' обязательно для заполнения"
-                       data-val="true"/>
-                <span asp-validation-for="Role" class="text-danger"></span>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label asp-for="Role" class="input-group-text" for="inputGroupSelect01"></label>
+                    </div>
+                    <select class="custom-select" asp-for="Role"
+                            data-val-required="Поле 'Роль' обязательно для заполнения"
+                            data-val="true" required>
+                        <option value="admin">Admin</option>
+                        <option selected="selected" value="user">User</option>
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Email"></label>

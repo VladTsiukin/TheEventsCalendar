@@ -75,6 +75,36 @@ namespace EventPlanning.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetEventInfo(int id)
+        {
+            if (id > 0)
+            {
+                var res = await _context.Events.FirstOrDefaultAsync(e => e.Id == id);
+
+                if (res != null)
+                {
+                    return Ok(res);
+
+                    //var eventModel = GetEventsModel(res);
+
+                    //if(eventModel != null)
+                    //{
+                    //    var amountSubscribers = _context.Subscribers    
+
+                    //    return Ok(res);
+                    //}                    
+                }
+            }
+
+            return BadRequest(new { Result = "error" });
+        }
+
+        private EventViewModel GetEventsModel(Event res)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> AllEvents()
         {
             var e = await _context.Events.ToArrayAsync();

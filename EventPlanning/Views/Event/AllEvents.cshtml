@@ -47,15 +47,15 @@ public string GetXsrfToken()
                                                            CultureInfo.CreateSpecificCulture("ru-Ru"))
                 </td>
                 <td class="text-center">
-                    <a class="btn btn-outline-light btn-sm" href="#">
-                        <i class="fas fa-share"></i>
+                    <a class="btn btn-outline-light btn-sm" href="#" data-id="@item.Id">
+                        <i data-id="@item.Id" class="fas fa-share"></i>
                     </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
+@*  sidebar  *@
 <div class="sideNav" id="sideCalendar">
     <div class="side-nav-content">
         <button type="button" id="closeSideBar" class="close m-2" aria-label="Close">
@@ -69,7 +69,41 @@ public string GetXsrfToken()
         </div>
     </div>
 </div>
-
+@*  subscriberModal  *@
+<div id="subscriberModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="subscriberModalTitle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subscriberModalTitle">
+                    <span class="badge badge-secondary">Подписаться на событие</span>
+                </h5>
+                <button type="button" class="close" aria-label="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li class="list-group-item bg-main d-flex justify-content-between align-items-center">
+                        Название
+                        <span data-name="" class="badge badge-light badge-pill"></span>
+                    </li>
+                    <li class="list-group-item bg-main d-flex justify-content-between align-items-center">
+                        Дата
+                        <span data-date="" class="badge badge-light badge-pill"></span>
+                    </li>
+                    <li class="list-group-item bg-main d-flex justify-content-between align-items-center">
+                        Количество участников
+                        <span data-amount="" class="badge badge-light badge-pill"></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-sm btn-outline-main">Подписаться</button>
+            </div>
+        </div>
+    </div>
+</div>
 @*  js  *@
 @section Scripts {
     @await Html.PartialAsync("_AlertPartial")
@@ -80,6 +114,33 @@ public string GetXsrfToken()
             const closeSideBar = document.getElementById('closeSideBar');
             const sideCalendarBtn = document.getElementById('sideCalendarBtn');
             const table = document.getElementsByTagName('table')[0];
+            const subscriberModal = document.getElementById('subscriberModal');
+
+            // add cammon event listener 'click' (for event data show)
+            document.addEventListener('click', (event) => {
+
+                if (!event.target.hasAttribute('data-id')) {
+                    return;
+                }
+
+                const id = event.target.getAttribute('data-id');
+                const nameEvent = subscriberModal.querySelector('span[data-name=""]');
+                nameEvent.textContent = id;
+                let idSend = encodeURIComponent(id);
+                const url = '/Event/GetEventInfo?id=' + idSend;
+
+                getPromiseData(url)
+                    .then((res) => {
+
+                        console.info(res);
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                    });
+
+                $('#subscriberModal').modal('show');
+
+            });
 
             // open sidebar
             sideCalendarBtn.addEventListener('click', (event) => {
@@ -148,7 +209,8 @@ public string GetXsrfToken()
                     + '<td class="text-center">' + toDateRusString(date)
                     + ' Время: ' + date.toLocaleTimeString('ru-RU', { hour12: false }) + '</td>'
                     + '<td class="text-center">'
-                    + '<a class="btn btn-outline-light btn-sm" href="#"><i class="fas fa-share"></i>'
+                    + '<a class="btn btn-outline-light btn-sm" href="#"'
+                    + 'data-id="' + obj.id + '"><i data-id="' + obj.id + '" class="fas fa-share"></i>'
                     + '</a></td>';
 
                 return tr;

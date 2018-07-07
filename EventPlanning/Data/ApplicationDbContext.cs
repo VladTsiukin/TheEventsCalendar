@@ -29,6 +29,7 @@ namespace EventPlanning.Data
             // set json data
             builder.Entity<Event>()
                 .Property(e => e._Content).HasColumnName("Content");
+                
         }
     }
 }
