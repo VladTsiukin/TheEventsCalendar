@@ -84,16 +84,19 @@ public string GetXsrfToken()
             <div class="modal-body">
                 <ul class="list-group">
                     <li class="list-group-item bg-main d-flex justify-content-between align-items-center">
-                        Название
+                        Название:
                         <span data-name="" class="badge badge-light badge-pill"></span>
                     </li>
                     <li class="list-group-item bg-main d-flex justify-content-between align-items-center">
-                        Дата
-                        <span data-date="" class="badge badge-light badge-pill"></span>
+                        Дата:
+                        <span data-event-date="" class="badge badge-light badge-pill"></span>
                     </li>
                     <li class="list-group-item bg-main d-flex justify-content-between align-items-center">
-                        Количество участников
-                        <span data-amount="" class="badge badge-light badge-pill"></span>
+                        Мест:
+                        <span data-total-place="" class="badge badge-secondary badge-pill" data-placement="top"
+                              data-toggle="tooltip" title="Всего"></span>
+                        <span data-place="" class="badge badge-light badge-pill" data-placement="top"
+                              data-toggle="tooltip" title="Осталось"></span>
                     </li>
                 </ul>
             </div>
@@ -115,6 +118,11 @@ public string GetXsrfToken()
             const sideCalendarBtn = document.getElementById('sideCalendarBtn');
             const table = document.getElementsByTagName('table')[0];
             const subscriberModal = document.getElementById('subscriberModal');
+            const listGroup = subscriberModal.querySelector('ul.list-group');
+            const eventName = subscriberModal.querySelector('span[data-name=""]');
+            const eventDate = subscriberModal.querySelector('span[data-event-date=""]');
+            const eventPlace = subscriberModal.querySelector('span[data-place=""]');
+            const eventTotalPlace = subscriberModal.querySelector('span[data-total-place=""]');
 
             // add cammon event listener 'click' (for event data show)
             document.addEventListener('click', (event) => {
@@ -123,23 +131,18 @@ public string GetXsrfToken()
                     return;
                 }
 
-                const id = event.target.getAttribute('data-id');
-                const nameEvent = subscriberModal.querySelector('span[data-name=""]');
-                nameEvent.textContent = id;
-                let idSend = encodeURIComponent(id);
-                const url = '/Event/GetEventInfo?id=' + idSend;
+                let id = event.target.getAttribute('data-id');
+                const url = '/Event/GetEventInfo?id=' + encodeURIComponent(id);
 
                 getPromiseData(url)
                     .then((res) => {
-
-                        console.info(res);
+                        responseGetEventInfo(res);
+                        $('#subscriberModal').modal('show');
                     })
                     .catch((e) => {
                         console.error(e);
-                    });
-
-                $('#subscriberModal').modal('show');
-
+                        $('#errorModal').modal('show');
+                    });                
             });
 
             // open sidebar
@@ -155,7 +158,7 @@ public string GetXsrfToken()
                 closeSidebar();
             });
 
-            // choose date
+            // when choosed date
             $('#datepicker').datepicker()
                 .on('changeDate', function (e) {
                     closeSidebar();
@@ -165,7 +168,7 @@ public string GetXsrfToken()
 
                     getPromiseData(url)
                         .then((res) => {
-                            responseProcessing(res);
+                            responseGetEventsByDate(res);
                         })
                         .catch((e) => {
                             $('#errorModal').modal('show');
@@ -173,8 +176,59 @@ public string GetXsrfToken()
                         });
                 });
 
-            // response processing
-            function responseProcessing(res) {
+            // processing responce from GetEventInfo
+            function responseGetEventInfo(json) {
+                let data = JSON.parse(json);
+
+                const date = new Date(data.eventDate);
+                eventName.textContent = data.name;
+                eventDate.textContent = 'Дата: ' + toDateRusString(date) +
+                    ' Время: ' + date.toLocaleTimeString('ru-RU', { hour12: false });
+                eventTotalPlace.textContent = data.amountOfParticipants;
+                eventPlace.textContent = getPlaces(data.subscribersCount, data.amountOfParticipants);
+
+                setDataTagLi(data);
+
+                console.log(data);
+            }
+
+            // replace tags li and set data
+            function setDataTagLi(data) {
+                const allTagsLI = listGroup.querySelectorAll('li[data-li="data-li"]');
+
+                if (allTagsLI.length > 0) {
+                    
+                    for (var i = 0; i < allTagsLI.length; i++) {
+                        listGroup.removeChild(allTagsLI[i]);
+                    }
+                }
+
+                for (var i = 0; i < data.content.length; i++) {
+                    listGroup.insertAdjacentElement('beforeend',
+                        createTagLiWithData(data.content[i].name, data.content[i].value));
+                }
+            }
+
+            // get places
+            function getPlaces(subscribers, total) {
+                if (subscribers >= total) {
+                    return 0;
+                }
+                return (total - subscribers);
+            }
+
+            // create tag li tag with data
+            function createTagLiWithData(name, value) {
+                const li = document.createElement('li');
+                li.setAttribute('data-li', 'data-li');
+                li.classList.add('list-group-item', 'bg-main', 'd-flex',
+                    'justify-content-between', 'align-items-center');
+                li.innerHTML = '' + name + '<span class="badge badge-light badge-pill">'+ value +'</span>';
+                return li;
+            }
+
+            // processing response from EventsByDate
+            function responseGetEventsByDate(res) {
                 const oldTbody = document.getElementsByTagName('tbody')[0];
                 let data = JSON.parse(res);
                 if (data.result == 'success') {
@@ -201,16 +255,16 @@ public string GetXsrfToken()
             }
 
             // create new tr
-            function createNewTr(obj) {
+            function createNewTr(json) {
                 const tr = document.createElement('tr');
-                const date = new Date(obj.eventDate);
+                const date = new Date(json.eventDate);
 
-                tr.innerHTML = '<td>' + obj.name + '</td>'
+                tr.innerHTML = '<td>' + json.name + '</td>'
                     + '<td class="text-center">' + toDateRusString(date)
                     + ' Время: ' + date.toLocaleTimeString('ru-RU', { hour12: false }) + '</td>'
                     + '<td class="text-center">'
                     + '<a class="btn btn-outline-light btn-sm" href="#"'
-                    + 'data-id="' + obj.id + '"><i data-id="' + obj.id + '" class="fas fa-share"></i>'
+                    + 'data-id="' + json.id + '"><i data-id="' + json.id + '" class="fas fa-share"></i>'
                     + '</a></td>';
 
                 return tr;

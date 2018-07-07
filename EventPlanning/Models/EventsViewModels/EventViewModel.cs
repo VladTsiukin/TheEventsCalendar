@@ -19,8 +19,6 @@ namespace EventPlanning.Models.EventsViewModels
 
         public int SubscribersCount { get; set; }
 
-        public int MaxSubscribers { get; set; }
-
         public ICollection<Content> Content { get; set; }
     }
 }

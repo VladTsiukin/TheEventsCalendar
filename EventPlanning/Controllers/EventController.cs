@@ -83,25 +83,18 @@ namespace EventPlanning.Controllers
 
                 if (res != null)
                 {
-                    return Ok(res);
+                    var amountSubscribers = await _context.Subscribers.CountAsync(s => s.EventId == id);
 
-                    //var eventModel = GetEventsModel(res);
+                    var eventModel = GetEventModel(res, amountSubscribers);
 
-                    //if(eventModel != null)
-                    //{
-                    //    var amountSubscribers = _context.Subscribers    
-
-                    //    return Ok(res);
-                    //}                    
+                    if (eventModel != null)
+                    {                       
+                        return Ok(eventModel);
+                    }
                 }
             }
 
             return BadRequest(new { Result = "error" });
-        }
-
-        private EventViewModel GetEventsModel(Event res)
-        {
-            throw new NotImplementedException();
         }
 
         [HttpGet]
@@ -177,5 +170,34 @@ namespace EventPlanning.Controllers
             }
 
         }
+
+        /// <summary>
+        /// Substituting the events entity
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
+        private EventViewModel GetEventModel(Event e, int amountOfParticipants)
+        {
+            try
+            {
+                return new EventViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    AmountOfParticipants = e.AmountOfParticipants,
+                    DateOfCreation = e.DateOfCreation,
+                    EventDate = e.EventDate,
+                    SubscribersCount = amountOfParticipants,
+                    Content = e.Content
+                };
+            }
+            catch (Exception)
+            {
+                _logger.LogError("FAIL to GetEventModel().");
+                return null;
+            }
+        }
+
+
     }
 }
