@@ -196,7 +196,7 @@ input:valid {
 
 .sideNav {
     position: fixed;
-    background-color: $secondary-color;
+    background-color: #fff;
     height: 100%;
     width: 0;
     z-index: 9999;
@@ -208,6 +208,9 @@ input:valid {
     opacity: 0;
 }
 
+#closeSideBar > span {
+    color: $secondary-color;
+}
 /* button */
 .btn-outline-main {
     color: rgba(23, 162, 184, 0.5);

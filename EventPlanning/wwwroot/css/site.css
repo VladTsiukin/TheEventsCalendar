@@ -165,7 +165,7 @@ input:valid {
 
 .sideNav {
   position: fixed;
-  background-color: #6c757d;
+  background-color: #fff;
   height: 100%;
   width: 0;
   z-index: 9999;
@@ -177,6 +177,9 @@ input:valid {
   transition: all ease-in-out 0.5s;
   overflow-x: hidden;
   opacity: 0; }
+
+#closeSideBar > span {
+  color: #6c757d; }
 
 /* button */
 .btn-outline-main {

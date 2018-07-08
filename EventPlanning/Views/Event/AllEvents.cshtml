@@ -44,7 +44,7 @@ public string GetXsrfToken()
                 </td>
                 <td class="text-center">
                     @item.EventDate.ToString("dd-MM-yyyy Время: HH:mm",
-                                                           CultureInfo.CreateSpecificCulture("ru-Ru"))
+                                                           CultureInfo.InvariantCulture)
                 </td>
                 <td class="text-center">
                     <a class="btn btn-outline-light btn-sm" href="#" data-id="@item.Id">
@@ -59,7 +59,7 @@ public string GetXsrfToken()
 <div class="sideNav" id="sideCalendar">
     <div class="side-nav-content">
         <button type="button" id="closeSideBar" class="close m-2" aria-label="Close">
-            <span aria-hidden="true" style="color: white;">&times;</span>
+            <span aria-hidden="true" title="Закрыть">&times;</span>
         </button>
         <div class="d-flex flex-column container-fields">
             @* datepicker *@
@@ -101,8 +101,8 @@ public string GetXsrfToken()
                 </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Закрыть</button>
-                <button type="submit" class="btn btn-sm btn-outline-main">Подписаться</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal" >Закрыть</button>
+                <button id="subscribeBtn" type="submit" class="btn btn-sm btn-outline-main">Подписаться</button>
             </div>
         </div>
     </div>
@@ -123,6 +123,7 @@ public string GetXsrfToken()
             const eventDate = subscriberModal.querySelector('span[data-event-date=""]');
             const eventPlace = subscriberModal.querySelector('span[data-place=""]');
             const eventTotalPlace = subscriberModal.querySelector('span[data-total-place=""]');
+            const subscribeBtn = document.getElementById('subscribeBtn');
 
             // add cammon event listener 'click' (for event data show)
             document.addEventListener('click', (event) => {
@@ -185,11 +186,31 @@ public string GetXsrfToken()
                 eventDate.textContent = 'Дата: ' + toDateRusString(date) +
                     ' Время: ' + date.toLocaleTimeString('ru-RU', { hour12: false });
                 eventTotalPlace.textContent = data.amountOfParticipants;
-                eventPlace.textContent = getPlaces(data.subscribersCount, data.amountOfParticipants);
 
+                let places = getPlaces(data.subscribersCount, data.amountOfParticipants);
+                ifEventPlace(places);
+                eventPlace.textContent = places;
                 setDataTagLi(data);
-
                 console.log(data);
+            }
+
+            // set ui event places
+            function ifEventPlace(places) {
+                if (places < 0) {
+                    throw new Error("Places not be < 0.");
+
+                } else if (places === 0) {
+                    eventPlace.style.color = '#ff5c5c';
+                    subscribeBtn.disabled = true;
+                    subscribeBtn.setAttribute('title', 'Мест нет.');
+                }
+                else {
+                    eventPlace.style.color = '#212529';
+                    subscribeBtn.disabled = false;
+                    if (subscribeBtn.hasAttribute('title')) {
+                        subscribeBtn.removeAttribute('title');
+                    }
+                }
             }
 
             // replace tags li and set data
