@@ -91,7 +91,7 @@ footer {
     margin-bottom: 2rem; } }
 
 /* buttons */
-.fa-calendar-plus, .fa-calendar-alt, .fa-pen-square {
+.fa-calendar-plus, .fa-calendar-alt, .fa-pen-square, .fa-chevron-circle-down {
   font-size: 3rem; }
 
 /* validation */
@@ -156,12 +156,14 @@ input:valid {
   transform: rotate(-90deg); }
 
 /* side nav calendar */
-#sideCalendarBtn:hover {
+#sideCalendarBtn:hover, #sideRefreshBtn:hover, #sideCalendarBtn, #sideRefreshBtn {
   cursor: pointer;
-  text-decoration: none; }
+  text-decoration: none;
+  color: #6c757d; }
 
-#sideCalendarBtn:active {
-  font-size: xx-large; }
+#sideCalendarBtn:active, #sideRefreshBtn:active {
+  font-size: xx-large;
+  text-decoration: none; }
 
 .sideNav {
   position: fixed;
@@ -172,9 +174,9 @@ input:valid {
   top: 0;
   left: 0;
   padding-top: 60px;
-  -webkit-transition: all ease-in-out 0.5s;
-  -o-transition: all ease-in-out 0.5s;
-  transition: all ease-in-out 0.5s;
+  -webkit-transition: all ease 0.5s;
+  -o-transition: all ease 0.5s;
+  transition: all ease 0.5s;
   overflow-x: hidden;
   opacity: 0; }
 

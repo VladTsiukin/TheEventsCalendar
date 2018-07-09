@@ -7,18 +7,18 @@
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 
 @functions {
-public string GetXsrfToken()
-{
-    return Xsrf.GetAndStoreTokens(Context).RequestToken;
-}
+    public string GetXsrfToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
 }
 
 <input type="hidden" name="RequestVarificationToken"
        id="RequestVarificationToken" value="@GetXsrfToken()" />
 
 <h2 class="shadow">
-    <a href="#" id="sideCalendarBtn" data-toggle="tooltip" data-target="top" title="Выбрать дату">📅</a>
-    Все события
+    <a href="#" id="sideCalendarBtn" data-toggle="tooltip" data-target="top" title="Выбрать дату">📅</a>   
+    <a href="#" id="sideRefreshBtn" data-toggle="tooltip" data-target="top" title="Обновить">Все события</a>
 </h2>
 
 <table class="table table-dark">
@@ -43,8 +43,7 @@ public string GetXsrfToken()
                     @item.Name.ToString()
                 </td>
                 <td class="text-center">
-                    @item.EventDate.ToString("dd-MM-yyyy Время: HH:mm",
-                                                           CultureInfo.InvariantCulture)
+                    @item.EventDate.ToString("dd-MM-yyyy Время: HH:mm", CultureInfo.InvariantCulture)
                 </td>
                 <td class="text-center">
                     <a class="btn btn-outline-light btn-sm" href="#" data-id="@item.Id">
@@ -113,6 +112,7 @@ public string GetXsrfToken()
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            var id;
             const sideCalendar = document.getElementById('sideCalendar');
             const closeSideBar = document.getElementById('closeSideBar');
             const sideCalendarBtn = document.getElementById('sideCalendarBtn');
@@ -124,6 +124,49 @@ public string GetXsrfToken()
             const eventPlace = subscriberModal.querySelector('span[data-place=""]');
             const eventTotalPlace = subscriberModal.querySelector('span[data-total-place=""]');
             const subscribeBtn = document.getElementById('subscribeBtn');
+            const sideRefreshBtn = document.getElementById('sideRefreshBtn');
+
+            // subscribe submit
+            subscribeBtn.addEventListener('click', (event) => {
+                try {
+                    if (id === null || id < 0) {
+                        throw new Error("id can not be null");
+                    }
+
+                    const data = new FormData();
+                    data.append('id', id);
+                    const url = '/Event/SubscribeToEvent';
+                    const token = document.getElementById('RequestVarificationToken').value;                    
+
+                    sendPostData(url, data, token)
+                        .then((json) => {
+                            const res = JSON.parse(json);
+                            if (res.result == 'exist') {
+                                $('#subscriberModal').modal('hide');
+                                $('#subscriberExistModal').modal('show');
+                            } 
+                            if (res.result == 'success') {
+                                $('#subscriberModal').modal('hide');
+                                $('#successModal').modal('show');
+                            }
+                            console.log(res);
+                        })
+                        .catch((error) => {
+                            $('#subscriberModal').modal('hide');
+                            $('#errorModal').modal('show');
+                            console.log(error);
+                        });
+
+
+                } catch (e) {
+                    console.error(e);
+                }
+            });
+
+            // reload page
+            sideRefreshBtn.addEventListener('click', () => {
+                window.location.reload();
+            });
 
             // add cammon event listener 'click' (for event data show)
             document.addEventListener('click', (event) => {
@@ -132,7 +175,7 @@ public string GetXsrfToken()
                     return;
                 }
 
-                let id = event.target.getAttribute('data-id');
+                id = event.target.getAttribute('data-id');
                 const url = '/Event/GetEventInfo?id=' + encodeURIComponent(id);
 
                 getPromiseData(url)
@@ -197,7 +240,7 @@ public string GetXsrfToken()
             // set ui event places
             function ifEventPlace(places) {
                 if (places < 0) {
-                    throw new Error("Places not be < 0.");
+                    throw new Error("Places can not be < 0.");
 
                 } else if (places === 0) {
                     eventPlace.style.color = '#ff5c5c';
@@ -224,9 +267,11 @@ public string GetXsrfToken()
                     }
                 }
 
-                for (var i = 0; i < data.content.length; i++) {
-                    listGroup.insertAdjacentElement('beforeend',
-                        createTagLiWithData(data.content[i].name, data.content[i].value));
+                if (data.content != null) {
+                    for (var i = 0; i < data.content.length; i++) {
+                        listGroup.insertAdjacentElement('beforeend',
+                            createTagLiWithData(data.content[i].name, data.content[i].value));
+                    }
                 }
             }
 

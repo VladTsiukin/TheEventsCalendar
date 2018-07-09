@@ -112,7 +112,7 @@ footer {
 }
 
 /* buttons */
-.fa-calendar-plus, .fa-calendar-alt, .fa-pen-square {
+.fa-calendar-plus, .fa-calendar-alt, .fa-pen-square, .fa-chevron-circle-down {
     font-size: 3rem;
 }
 
@@ -185,13 +185,15 @@ input:valid {
 }
 
 /* side nav calendar */
-#sideCalendarBtn:hover {
+#sideCalendarBtn:hover, #sideRefreshBtn:hover, #sideCalendarBtn, #sideRefreshBtn {
     cursor: pointer;
     text-decoration: none;
+    color: $secondary-color;
 }
 
-#sideCalendarBtn:active {
+#sideCalendarBtn:active, #sideRefreshBtn:active {
     font-size: xx-large;
+    text-decoration: none;
 }
 
 .sideNav {
@@ -203,7 +205,7 @@ input:valid {
     top: 0;
     left: 0;
     padding-top: 60px;
-    transition: all ease-in-out 0.5s;
+    transition: all ease 0.5s;
     overflow-x: hidden;
     opacity: 0;
 }

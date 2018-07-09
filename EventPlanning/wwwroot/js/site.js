@@ -69,3 +69,24 @@ function addZero(val) {
         return '0' + val;
     };
 }
+
+// send promise post xhr request
+function sendPostData(url, data, token) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url);
+        xhr.setRequestHeader('RequestVerificationToken', token);
+        xhr.onload = () => {
+            if (xhr.status == 200) {
+                resolve(xhr.response);
+            } else {
+                reject(xhr.response);
+            }
+        };
+        xhr.onerror = () => {
+            reject(xhr.response);
+        };
+        xhr.send(data);
+    });
+}
+

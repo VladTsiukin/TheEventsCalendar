@@ -74,6 +74,68 @@ namespace EventPlanning.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SubscribeToEvent(int id)
+        {
+            if (id > 0)
+            {
+                // get user from db
+                var user = await _userManager.GetUserAsync(this.User);
+                if (user == null)
+                {
+                    throw new ApplicationException($"Unable to load user.");
+                }
+                _logger.LogInformation("User successfully gotted.");
+
+                // check if subscriber exist
+                var subscriber = await _context.Subscribers
+                    .FirstOrDefaultAsync(s => s.EventId == id &&
+                    s.AppUserId == user.Id);
+
+                if (subscriber != null)
+                {
+                    return Ok(new { Result = "exist" });
+                }
+
+                // create subscriber
+                await _context.Subscribers.AddAsync(new Subscribers
+                {
+                    AppUserId = user.Id,
+                    EventId = id
+                });
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Subscriber successfully added.");
+
+                subscriber = await _context.Subscribers
+                .FirstOrDefaultAsync(s => s.EventId == id &&
+                s.AppUserId == user.Id);
+
+                if (subscriber == null)
+                {
+                    _logger.LogError("Can not load a new subscriber");
+                    return StatusCode(500);
+                }
+
+                // get the event by id
+                var e = await _context.Events.FindAsync(id);
+
+                if (e == null)
+                {
+                    _logger.LogError("Unable to load the event Id: {0}.", id);
+                    return StatusCode(500);
+                }
+
+                e.Subscribers.Add(subscriber);
+                user.Subscribers.Add(subscriber);
+                await _context.SaveChangesAsync();
+                _logger.LogError("Subscriber successfully added to event and user.");
+
+                return Ok(new { Result = "success" });
+            }
+
+            return BadRequest(id);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetEventInfo(int id)
         {

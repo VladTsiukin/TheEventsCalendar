@@ -107,17 +107,17 @@
                     </button>
 
                     <div class="modal-footer add-event-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Закрыть</button>
                         @if (User.IsInRole("admin"))
                         {
-                            <button id="submitBtn" type="submit" class="btn btn-outline-main">
+                            <button id="submitBtn" type="submit" class="btn btn-sm btn-outline-main">
                                 Создать
                             </button>
                         }
                         else
                         {
                             <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="Нет прав доступа">
-                                <a class="btn btn-outline-main disabled" href="#" style="pointer-events: none;">
+                                <a class="btn btn-sm btn-outline-main disabled" href="#" style="pointer-events: none;">
                                     Создать
                                 </a>
                             </span>
@@ -170,7 +170,7 @@
                         const token = document.getElementById('RequestVerificationToken').value;
                         const url = '@Url.Action("CreateEvent", "Event")';
 
-                        sendPromiseEvent(url, eventData, token)
+                        sendPostData(url, eventData, token)
                             .then((res) => {
                                 console.info(res);
                                 closeModal(false);
@@ -181,26 +181,6 @@
                                 closeModal(true);
                             });
                     }
-                });
-            }
-           
-            // send promise xhr request
-            function sendPromiseEvent(url, data, token) {
-                return new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', url);
-                    xhr.setRequestHeader('RequestVerificationToken', token);
-                    xhr.onload = () => {
-                        if (xhr.status == 200) {
-                            resolve(xhr.response);
-                        } else {
-                            reject(xhr.response);
-                        }
-                    };
-                    xhr.onerror = () => {
-                        reject(xhr.response);
-                    };
-                    xhr.send(data);
                 });
             }
 
