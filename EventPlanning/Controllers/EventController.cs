@@ -12,6 +12,7 @@ using EventPlanning.Data;
 using EventPlanning.Models;
 using EventPlanning.Models.EventsViewModels;
 using Microsoft.EntityFrameworkCore;
+using EventPlanning.Services;
 
 namespace EventPlanning.Controllers
 {
@@ -21,8 +22,10 @@ namespace EventPlanning.Controllers
     {
         public EventController(ApplicationDbContext context,
                                UserManager<ApplicationUser> userManager,
-                               ILogger<HomeController> logger)
+                               ILogger<HomeController> logger,
+                               IEmailSender emailSender)
         {
+            this._emailSender = emailSender;
             this._context = context;
             this._userManager = userManager;
             this._logger = logger;
@@ -31,6 +34,7 @@ namespace EventPlanning.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -125,15 +129,53 @@ namespace EventPlanning.Controllers
                     return StatusCode(500);
                 }
 
+                // add subscriber to event and user
                 e.Subscribers.Add(subscriber);
                 user.Subscribers.Add(subscriber);
                 await _context.SaveChangesAsync();
-                _logger.LogError("Subscriber successfully added to event and user.");
+                _logger.LogInformation("Subscriber successfully added to event and user.");
+
+                // send email
+                var callbackUrl = Url.EventLink(user.Id, id, Request.Scheme);
+                await _emailSender.SendEmailToSubscriberAsync(user.Email, callbackUrl);
+                _logger.LogInformation("Email successfully send.");
 
                 return Ok(new { Result = "success" });
             }
 
             return BadRequest(id);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ShowEventByEmail(string userId, int eventId)
+        {
+            if (userId == null || eventId <= 0)
+            {
+                _logger.LogError("User id and eventId not found.");
+                return RedirectToAction(nameof(EventController.AllEvents), "Event");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{userId}'.");
+            }
+
+            var e = await _context.Events.FindAsync(eventId);
+
+            if (e != null)
+            {
+                var amountSubscribers = await _context.Subscribers.CountAsync(s => s.EventId == eventId);
+
+                var eventModel = GetEventModel(e, amountSubscribers);
+
+                if (eventModel != null)
+                {
+                    return View(eventModel);
+                }               
+            }
+            _logger.LogError("Event not found.");
+            return RedirectToAction(nameof(EventController.AllEvents), "Event");
         }
 
         [HttpGet]

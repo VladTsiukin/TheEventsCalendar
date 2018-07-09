@@ -25,5 +25,14 @@ namespace Microsoft.AspNetCore.Mvc
                 values: new { userId, code },
                 protocol: scheme);
         }
+
+        public static string EventLink(this IUrlHelper urlHelper, string userId, int eventId, string schema)
+        {
+            return urlHelper.Action(
+                action: nameof(EventController.ShowEventByEmail),
+                controller: "Event",
+                values: new { userId, eventId },
+                protocol: schema);
+        }
     }
 }

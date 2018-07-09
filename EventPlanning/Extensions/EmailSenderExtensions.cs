@@ -11,8 +11,14 @@ namespace EventPlanning.Services
     {
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
         {
-            return emailSender.SendEmailAsync(email, "Confirm your email",
-                $"<h2>Пожалуйста подтвердите свою учетную запись, нажав на эту ссылку: <a href='{HtmlEncoder.Default.Encode(link)}' style='color:#E3F2FD;'>Event Planning App</a></h2>");
+            return emailSender.SendEmailAsync(email, "Подтвердить email",
+                $"<h3>Пожалуйста подтвердите свою учетную запись, нажав на эту ссылку: <a href='{HtmlEncoder.Default.Encode(link)}' style='color:#41adfc;'>Event Planning App</a></h3>");
+        }
+
+        public static Task SendEmailToSubscriberAsync(this IEmailSender emailSender, string email, string link)
+        {
+            return emailSender.SendEmailAsync(email, "Подписка на событие",
+                $"<h3>Вы подписаны на событие: <a href='{HtmlEncoder.Default.Encode(link)}' style='color:#41adfc;'>Event Planning App</a></h3>");
         }
     }
 }

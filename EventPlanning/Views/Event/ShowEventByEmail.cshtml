@@ -1,0 +1,59 @@
+﻿@model EventPlanning.Models.EventsViewModels.EventViewModel
+
+@{
+    ViewData["Title"] = "Событие";
+}
+
+<div class="mb-3"></div>
+<h2>Событие <span class="badge badge-secondary">Info</span></h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountOfParticipants)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AmountOfParticipants)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateOfCreation)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateOfCreation)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubscribersCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubscribersCount)
+        </dd>
+        @if (Model.Content != null)
+        {
+            foreach (var item in Model.Content)
+            {
+                <dt>
+                    @item.Name
+                </dt>
+                <dd>
+                    @item.Value
+                </dd>
+            }
+        }
+    </dl>
+</div>
+<div>
+    <a class="btn btn-sm btn-outline-main" asp-action="AllEvents" asp-controller="Event">К списку событий</a>
+</div>
