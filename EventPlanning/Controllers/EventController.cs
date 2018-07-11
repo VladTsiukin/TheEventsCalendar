@@ -36,6 +36,11 @@ namespace EventPlanning.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
 
+        /// <summary>
+        /// Add new event to db.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin")]
@@ -78,6 +83,11 @@ namespace EventPlanning.Controllers
             }
         }
 
+        /// <summary>
+        /// The user subscribe to the event
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> SubscribeToEvent(int id)
         {
@@ -89,7 +99,7 @@ namespace EventPlanning.Controllers
                 {
                     throw new ApplicationException($"Unable to load user.");
                 }
-                _logger.LogInformation("User successfully gotted.");
+                _logger.LogInformation("User id identical.");
 
                 // check if subscriber exist
                 var subscriber = await _context.Subscribers
@@ -129,11 +139,11 @@ namespace EventPlanning.Controllers
                     return StatusCode(500);
                 }
 
-                // add subscriber to event and user
+                // add subscriber to event and to user
                 e.Subscribers.Add(subscriber);
                 user.Subscribers.Add(subscriber);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Subscriber successfully added to event and user.");
+                _logger.LogInformation("Subscriber successfully added to event and to user.");
 
                 // send email
                 var callbackUrl = Url.EventLink(user.Id, id, Request.Scheme);
@@ -142,10 +152,16 @@ namespace EventPlanning.Controllers
 
                 return Ok(new { Result = "success" });
             }
-
+            _logger.LogError("Fail by events id.");
             return BadRequest(id);
         }
 
+        /// <summary>
+        /// Show the event by email
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="eventId"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ShowEventByEmail(string userId, int eventId)
@@ -174,10 +190,15 @@ namespace EventPlanning.Controllers
                     return View(eventModel);
                 }               
             }
-            _logger.LogError("Event not found.");
+            _logger.LogError("Can not show the event.");
             return RedirectToAction(nameof(EventController.AllEvents), "Event");
         }
 
+        /// <summary>
+        /// Get detailed info about the event
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetEventInfo(int id)
         {
@@ -201,6 +222,10 @@ namespace EventPlanning.Controllers
             return BadRequest(new { Result = "error" });
         }
 
+        /// <summary>
+        /// Get all events
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> AllEvents()
         {
@@ -210,6 +235,11 @@ namespace EventPlanning.Controllers
             return View(events);
         }
 
+        /// <summary>
+        /// Get the events by date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GetEventsByDate(string date)
         {
@@ -284,6 +314,11 @@ namespace EventPlanning.Controllers
         {
             try
             {
+                if (e == null)
+                {
+                    throw new NullReferenceException("Event can not be null");
+                }
+
                 return new EventViewModel
                 {
                     Id = e.Id,
