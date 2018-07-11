@@ -133,6 +133,7 @@
                         throw new Error("id can not be null");
                     }
 
+                    subscribeBtn.disabled = true;
                     const data = new FormData();
                     data.append('id', id);
                     const url = '/Event/SubscribeToEvent';
@@ -150,11 +151,13 @@
                                 $('#successModal').modal('show');
                             }
                             console.log(res);
+                            subscribeBtn.disabled = false;
                         })
                         .catch((error) => {
                             $('#subscriberModal').modal('hide');
                             $('#errorModal').modal('show');
                             console.log(error);
+                            subscribeBtn.disabled = false;
                         });
 
 
