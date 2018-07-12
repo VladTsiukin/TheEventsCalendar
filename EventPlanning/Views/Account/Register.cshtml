@@ -1,6 +1,7 @@
-﻿@model RegisterViewModel
+﻿@inject IViewLocalizer Localizer
+@model RegisterViewModel
 @{
-    ViewData["Title"] = "Регистрация нового аккаунта";
+    ViewData["Title"] = Localizer["Register a new account"];
 }
 
 <h3>@ViewData["Title"]</h3>
@@ -16,7 +17,7 @@
                         <label asp-for="Role" class="input-group-text" for="inputGroupSelect01"></label>
                     </div>
                     <select class="custom-select" asp-for="Role"
-                            data-val-required="Поле 'Роль' обязательно для заполнения"
+                            data-val-required="@Localizer["The 'Role' field is required"]"
                             data-val="true" required>
                         <option value="admin">Admin</option>
                         <option selected="selected" value="user">User</option>
@@ -26,25 +27,25 @@
             <div class="form-group">
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" required
-                       data-val-required="Поле 'Email' обязательно для заполнения"
+                       data-val-required="@Localizer["The 'Email' field is required"]"
                        data-val="true"/>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password"></label>
                 <input asp-for="Password" class="form-control" required
-                       data-val-required="Поле 'Пароль' обязательно для заполнения"
+                       data-val-required="@Localizer["The 'Password' field is required"]"
                        data-val="true"/>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ConfirmPassword"></label>
                 <input asp-for="ConfirmPassword" class="form-control" required
-                       data-val-required="Необходимо подтвердить пароль"
+                       data-val-required="@Localizer["You must confirm the password"]"
                        data-val="true"/>
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-outline-main">Зарегистрироваться</button>
+            <button type="submit" class="btn btn-outline-main">@Localizer["Register"]</button>
         </form>
     </div>
 </div>

@@ -117,13 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Account settings" xml:space="preserve">
-    <value>Настройки аккаунта</value>
+  <data name="Confirm password" xml:space="preserve">
+    <value>Подтвердить пароль</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Сохранить</value>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
   </data>
-  <data name="Verify email" xml:space="preserve">
-    <value>Подтвердить email</value>
+  <data name="Role" xml:space="preserve">
+    <value>Алиас (роль)</value>
+  </data>
+  <data name="The 'Confirmed Password' does not match the password above." xml:space="preserve">
+    <value>'Подтверждённый пароль' не совпадает с паролем выше.</value>
+  </data>
+  <data name="{0} must be at least {2} and not more than {1} characters." xml:space="preserve">
+    <value>{0} должен быть не менее {2} и не более {1} символов.</value>
   </data>
 </root>

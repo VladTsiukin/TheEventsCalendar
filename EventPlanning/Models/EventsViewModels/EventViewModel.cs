@@ -10,19 +10,19 @@ namespace EventPlanning.Models.EventsViewModels
     {
         public int Id { get; set; }
 
-        [Display(Name = "Название")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
-        [Display(Name = "Количество участнивов")]
+        [Display(Name = "Amount of participants")]
         public int AmountOfParticipants { get; set; } = 0;
 
-        [Display(Name = "Дата создания")]
+        [Display(Name = "Date of creation")]
         public DateTimeOffset DateOfCreation { get; set; }
 
-        [Display(Name = "Дата события")]
+        [Display(Name = "Event date")]
         public DateTimeOffset EventDate { get; set; }
 
-        [Display(Name = "Подписано на событие")]
+        [Display(Name = "Signed on event")]
         public int SubscribersCount { get; set; }
 
         public ICollection<Content> Content { get; set; }

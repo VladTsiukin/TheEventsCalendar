@@ -8,16 +8,16 @@ namespace EventPlanning.Models.AccountViewModels
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "Поле обязательно для заполнения")]
+        [Required(ErrorMessage = "The field is required")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Поле обязательно для заполнения")]
+        [Required(ErrorMessage = "The field is required")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 
-        [Display(Name = "Запомнить пароль?")]
+        [Display(Name = "Remember my password?")]
         public bool RememberMe { get; set; }
     }
 }

@@ -117,13 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Account settings" xml:space="preserve">
-    <value>Настройки аккаунта</value>
+  <data name="The 'Date' field is required" xml:space="preserve">
+    <value>Поле 'Дата' обязательно для заполнения</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Сохранить</value>
+  <data name="The 'Name' field is required" xml:space="preserve">
+    <value>Поле 'Название' обязательно для заполнения</value>
   </data>
-  <data name="Verify email" xml:space="preserve">
-    <value>Подтвердить email</value>
+  <data name="The 'Number of participants' field is required" xml:space="preserve">
+    <value>Поле 'Количество участников' обязательно для заполнения</value>
+  </data>
+  <data name="The name can not exceed 256 characters!" xml:space="preserve">
+    <value>Название не должно превышать 256-ти символов!</value>
   </data>
 </root>

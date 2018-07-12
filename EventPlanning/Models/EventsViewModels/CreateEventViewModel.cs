@@ -7,16 +7,16 @@ namespace EventPlanning.Models.EventsViewModels
     public class CreateEventViewModel
     {
         [Required(ErrorMessage = "Поле 'Название' обязательно для заполнения")]
-        [MaxLength(256, ErrorMessage = "Название не должно превышать 256-ти символов!")]
+        [MaxLength(256, ErrorMessage = "The name can not exceed 256 characters!")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Поле 'Количество участников' обязательно для заполнения")]
+        [Required(ErrorMessage = "The 'Number of participants' field is required")]
         public int AmountOfParticipants { get; set; } = 0;
 
         [Required]
         public DateTimeOffset DateOfCreation { get; set; }
 
-        [Required(ErrorMessage = "Поле 'Дата' обязательно для заполнения")]
+        [Required(ErrorMessage = "The 'Date' field is required")]
         public DateTimeOffset EventDate { get; set; }
        
         public Content[] Content { get; set; }

@@ -117,13 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Account settings" xml:space="preserve">
-    <value>Настройки аккаунта</value>
+  <data name="Amount of participants" xml:space="preserve">
+    <value>Количество участнивов</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Сохранить</value>
+  <data name="Date of creation" xml:space="preserve">
+    <value>Дата создания</value>
   </data>
-  <data name="Verify email" xml:space="preserve">
-    <value>Подтвердить email</value>
+  <data name="Event date" xml:space="preserve">
+    <value>Дата события</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Signed on event" xml:space="preserve">
+    <value>Подписано на событие</value>
   </data>
 </root>

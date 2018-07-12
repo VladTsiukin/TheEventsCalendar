@@ -8,7 +8,7 @@ namespace EventPlanning.Models.ManageViewModels
 {
     public class IndexViewModel
     {
-        [Display(Name = "Юзер")]
+        [Display(Name = "User")]
         public string Username { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
@@ -18,7 +18,7 @@ namespace EventPlanning.Models.ManageViewModels
         public string Email { get; set; }
 
         [Phone]
-        [Display(Name = "Телефон")]
+        [Display(Name = "Phone")]
         public string PhoneNumber { get; set; }
 
         public string StatusMessage { get; set; }

@@ -1,15 +1,16 @@
 ﻿@using EventPlanning.Views.Manage
 @inject SignInManager<ApplicationUser> SignInManager
+@inject IViewLocalizer Localizer
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 
 <ul class="nav flex-column nav-pills">
     <li class="@ManageNavPages.IndexNavClass(ViewContext)">
-        <a asp-action="Index" class="badge badge-secondary">Профиль</a>
+        <a asp-action="Index" class="badge badge-secondary">@Localizer["Account"]</a>
     </li>
     <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)">
-        <a asp-action="ChangePassword" class="badge badge-secondary">Сменить пароль</a>
+        <a asp-action="ChangePassword" class="badge badge-secondary">@Localizer["Change password"]</a>
     </li>
     @if (hasExternalLogins)
     {
@@ -17,4 +18,3 @@
     }
     @*<li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)"><a asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>*@
 </ul>
-

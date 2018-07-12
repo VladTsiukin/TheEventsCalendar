@@ -8,8 +8,8 @@ namespace EventPlanning.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
-        [Required(ErrorMessage = "Поле обязательно для заполнения")]
-        [Display(Name = "Алиас (роль)")]
+        [Required]
+        [Display(Name = "Role")]
         public string Role { get; set; }
 
         [Required]
@@ -18,14 +18,14 @@ namespace EventPlanning.Models.AccountViewModels
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "{0} должен быть не менее {2} и не более {1} символов.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "{0} must be at least {2} and not more than {1} characters.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
-        [Compare("Password", ErrorMessage = "'Подтверждённый пароль' не совпадает с паролем выше.")]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The 'Confirmed Password' does not match the password above.")]
         public string ConfirmPassword { get; set; }
     }
 }
