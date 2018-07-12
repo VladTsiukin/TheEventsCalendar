@@ -1,6 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Главная страница";
+﻿@inject IViewLocalizer Localizer
 
+@{
+    ViewData["Title"] = Localizer["Home page"];
 }
 
 @model CreateEventViewModel
@@ -14,7 +15,7 @@
         return Xsrf.GetAndStoreTokens(Context).RequestToken;
     }
 }
-@{ string userId = User?.FindFirstValue(ClaimTypes.NameIdentifier); }
+
 @* RequestVerificationToken *@
 <input type="hidden" id="RequestVerificationToken"
        name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
@@ -30,13 +31,13 @@
             {
                 <a class="btn btn-outline-main mr-1" href="#" data-toggle="modal" data-target="#exampleModalLong">
                     <i class="fas fa-calendar-plus" data-toggle="tooltip";
-                       data-placement="top" title="Создать событие">
+                       data-placement="top" title="@Localizer["Create event"]">
                     </i>
                 </a>
             }
             else
             {
-                <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="Нет прав доступа">
+                <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="@Localizer["No access rights"]">
                     <a class="btn btn-outline-main disabled" href="#" style="pointer-events: none;">
                         <i class="fas fa-calendar-plus"></i>
                     </a>
@@ -46,7 +47,7 @@
         }
         <a asp-action="AllEvents" asp-controller="Event" id="allEventsBtn" class="btn btn-outline-main ml-1">
             <i class="fas fa-calendar-alt" data-toggle="tooltip" data-placement="top"
-               title="Посмотреть все события"></i>
+               title="@Localizer["Show all events"]"></i>
         </a>
     </div>
 </div>
@@ -56,7 +57,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">
-                    <span class="badge badge-secondary">Создать событие</span>
+                    <span class="badge badge-secondary">@Localizer["Create event"]</span>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -69,7 +70,7 @@
                     @* INPUT NAME *@
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
+                            <span class="input-group-text" id="inputGroup-sizing-sm">@Localizer["Name"]</span>
                         </div>
                         <input asp-for="Name" class="form-control" aria-label="Small" required
                                aria-describedby="inputGroup-sizing-sm" list="name-event">
@@ -80,7 +81,7 @@
                     @* INPUT DATE *@
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Дата</span>
+                            <span class="input-group-text" id="inputGroup-sizing-sm">@Localizer["Date"]</span>
                         </div>
                         <input type="datetime-local" asp-for="EventDate" aria-label="Small" 
                                value="" class="form-control"
@@ -89,7 +90,7 @@
                     @* INPUT NUMBER *@
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Количество участников</span>
+                            <span class="input-group-text" id="inputGroup-sizing-sm">@Localizer["Amount of participants"]</span>
                         </div>
                         <input asp-for="AmountOfParticipants" required min="0" class="form-control" aria-label="Small"
                                aria-describedby="inputGroup-sizing-sm" list="numbers-participants">
@@ -103,22 +104,22 @@
                     </div>
                     @* BUTTON ADD FIELD *@
                     <button id="addField" type="button" class="btn btn-outline-main btn-sm mb-3">
-                        <i class="fas fa-plus"> Добавить Поле</i>
+                        <i class="fas fa-plus"> @Localizer["Add field"]</i>
                     </button>
 
                     <div class="modal-footer add-event-footer">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">@Localizer["Close"]</button>
                         @if (User.IsInRole("admin"))
                         {
                             <button id="submitBtn" type="submit" class="btn btn-sm btn-outline-main">
-                                Создать
+                                @Localizer["Create"]
                             </button>
                         }
                         else
                         {
-                            <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="Нет прав доступа">
+                            <span class="d-inline-block mr-1 disabledSpan" data-toggle="popover" data-content="@Localizer["No access rights"]">
                                 <a class="btn btn-sm btn-outline-main disabled" href="#" style="pointer-events: none;">
-                                    Создать
+                                    @Localizer["Create"]
                                 </a>
                             </span>
                         }
@@ -225,7 +226,7 @@
                     let fieldName = 'field' + fieldId;
 
                     let innerFields = '<div class="input-group-prepend">'
-                        + '<span class="input-group-text" id="">Название/Значение</span></div>'
+                        + '<span class="input-group-text" id="">@Localizer["Name/Value"]</span></div>'
                         + '<input name="Content[0].Name" class="form-control i-field" required>'
                         + '<input name="Content[0].Value" class="form-control i-field" required>'
                         + '<div class="input-group-append">'

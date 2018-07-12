@@ -52,9 +52,32 @@ namespace EventPlanning
                 op.Filters.Add(new RequireHttpsAttribute());
             });
 
+            // add localization options
+            services.Configure<RequestLocalizationOptions>(op =>
+            {
+                var supportedCultures = new List<CultureInfo>
+                {
+                    new CultureInfo("ru"),
+                    new CultureInfo("en")
+                };
+
+                op.DefaultRequestCulture = new RequestCulture("en");
+                op.SupportedCultures = supportedCultures;
+                op.SupportedUICultures = supportedCultures;
+                //op.RequestCultureProviders.Insert(0, new CustomRequestCultureProvider(async context =>
+                //{
+                //    return new ProviderCultureResult("en");
+                //}));
+            });
+
+            // add the localization services to the services container
+            services.AddLocalization(op => op.ResourcesPath = "Resources");
+
+            // add Sql Server
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            // add Identity
             services.AddIdentity<ApplicationUser, IdentityRole>(op => {
                     // confirm email
                     op.SignIn.RequireConfirmedEmail = true;
@@ -96,23 +119,13 @@ namespace EventPlanning
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            // add log
+            // use log
             loggerFactory.AddConsole(Configuration.GetSection("Loging"));
             loggerFactory.AddDebug();
 
-            // use localization:
-            var supportedCultures = new[]
-            {
-                new CultureInfo("ru-Ru"),
-                new CultureInfo("en-Us")
-            };
-
-            app.UseRequestLocalization(new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("ru-Ru"),
-                SupportedCultures = supportedCultures,
-                SupportedUICultures = supportedCultures
-            });
+            // use localization
+            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(locOptions.Value);
 
             app.UseStaticFiles();
 

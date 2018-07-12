@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -44,12 +46,12 @@
         @* Event planning badge *@
             <a asp-controller="Home" asp-action="Index" class="navbar-brand">
                 <span class="badge badge-secondary"
-                      data-toggle="tooltip" data-placement="right" title="Главная страница">Event Planning</span>
+                      data-toggle="tooltip" data-placement="right" title="@Localizer["Home page"]">Event Planning</span>
             </a>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    
+                <li class="badge badge-light mt-2">
+                    @await Html.PartialAsync("_SelectLanguagePartial")
                 </li>
             </ul>
              @await Html.PartialAsync("_LoginPartial")

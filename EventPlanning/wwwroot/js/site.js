@@ -1,9 +1,26 @@
 ﻿/* site.js */
 'use strict';
 
+var _Localization = 'en';
+
+// set localize
+(function () {
+    if (getCookie('.AspNetCore.Culture') == 'c=ru|uic=ru') {
+        _Localization = 'ru';
+    }
+})();
+
+// get cookie
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
 /* DATEPICKER */
 $('#datepicker').datepicker({
-    language: 'ru',
+    language: _Localization,
     todayHighlight: false,
     todayBtn: true,
     templates: {
@@ -18,13 +35,13 @@ $(document).ready(function () {
     const tableCalendar = document.querySelector('#datepicker>div>div.datepicker-days>table');
     const tableTr = document.querySelector('#datepicker>div>div.datepicker-days>table>thead>tr:nth-child(3)');
 
-    if (tableCalendar != null) {
-        tableCalendar.classList.add('table'); 
+    if (tableCalendar !== null) {
+        tableCalendar.classList.add('table');
         tableTr.classList.add('table-dark');
     }
 
     // today button event handler
-    if (todayBtn != null) {
+    if (todayBtn !== null) {
         todayBtn.addEventListener('click', (event) => {
             setBgTd();
         });
@@ -50,7 +67,7 @@ $('.container-fields').height(($(document).height() - 180));
 $('#d-picker-btn').click((e) => {
     const el = document.createElement('h5');
     el.textContent = $('#datepicker').datepicker('getFormattedDate');
-     $('.event-h4').after(el);      
+    $('.event-h4').after(el);
 });
 
 /* disable button popover  */
@@ -90,3 +107,12 @@ function sendPostData(url, data, token) {
     });
 }
 
+// localization
+(function () {
+    const langForm = document.getElementById('langForm');
+    const langSelect = document.getElementById('langSelect');
+
+    langSelect.addEventListener('change', (e) => {
+        langForm.submit();
+    });
+})();

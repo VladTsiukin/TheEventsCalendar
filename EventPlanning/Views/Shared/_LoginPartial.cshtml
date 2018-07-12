@@ -3,6 +3,7 @@
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IViewLocalizer Localizer
 
 @if (SignInManager.IsSignedIn(User))
 {
@@ -10,13 +11,13 @@
         <ul class="nav navbar-nav navbar-right">
             <li class="nav-item">
                 <a asp-area="" class="btn btn-link navbar-btn navbar-link" asp-controller="Manage" asp-action="Index" 
-                   data-toggle="tooltip" data-placement="left"  title="Настройки аккаунта">
+                   data-toggle="tooltip" data-placement="left"  title="@Localizer["Account settings"]">
                     <i class="far fa-user-circle text-secondary"></i>
                 </a>
             </li>
             <li class="nav-item">
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">
-                    <i class="fas fa-sign-in-alt text-secondary"> Выйти</i>
+                    <i class="fas fa-sign-in-alt text-secondary"> @Localizer["Log out"]</i>
                 </button>
             </li>
         </ul>
@@ -27,12 +28,12 @@ else
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
             <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">
-                <i class="fas fa-registered"> Регистрация</i>
+                <i class="fas fa-registered"> @Localizer["Register"]</i>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">
-                <i class="fas fa-sign-in-alt"> Войти</i>
+                <i class="fas fa-sign-in-alt"> @Localizer["Log in"]</i>
             </a>
         </li>
     </ul>
