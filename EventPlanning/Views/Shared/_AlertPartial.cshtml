@@ -1,4 +1,6 @@
-﻿<!-- modals -->
+﻿@inject IViewLocalizer Localizer
+
+<!-- modals -->
 @* success modal *@
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -7,7 +9,7 @@
                 <i class="far fa-check-circle text-info" style="font-size: 4rem;"></i>
             </div>
             <div class="modal-body">
-                <p class="text-info text-center">Запрос успешно выполнен:)</p>
+                <p class="text-info text-center">@Localizer["Success"]:)</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-info" data-dismiss="modal">Ok</button>
@@ -24,8 +26,8 @@
                 <i class="fas fa-exclamation-triangle text-secondary" style="font-size: 4rem;"></i>
             </div>
             <div class="modal-body">
-                <p class="text-danger text-center">Произошла ошибка!</p>
-                <p class="text-danger text-center">Попробуйте ввести данные снова.</p>
+                <p class="text-danger text-center">@Localizer["An error has uccurred"]!</p>
+                <p class="text-danger text-center">@Localizer["Please try again"].</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Ok</button>
@@ -42,7 +44,7 @@
                 <i class="fas fa-not-equal text-secondary" style="font-size: 4rem;"></i>
             </div>
             <div class="modal-body">
-                <p class="text-secondary text-center">По данной дате событий нет.</p>
+                <p class="text-secondary text-center">"@Localizer["There are no events on this date"].</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Ok</button>
@@ -59,7 +61,7 @@
                 <i class="fas fa-chevron-circle-down text-info" style="font-size: 4rem;"></i>
             </div>
             <div class="modal-body">
-                <p class="text-info text-center">Вы уже подписаны на данное событие.</p>
+                <p class="text-info text-center">@Localizer["You are already subscribed to this event"].</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-info" data-dismiss="modal">Ok</button>
