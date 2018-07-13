@@ -14,7 +14,7 @@ namespace EventPlanning.Models.AccountViewModels
 
         [Required(ErrorMessage = "The field is required")]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [Display(Name = "Remember my password?")]
