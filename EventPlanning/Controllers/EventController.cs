@@ -229,8 +229,7 @@ namespace EventPlanning.Controllers
         [HttpGet]
         public async Task<IActionResult> AllEvents()
         {
-            var e = await _context.Events.ToArrayAsync();
-            var events = GetEventsModel(e);
+            var events = await GetEventsModel(_context.Events).ToListAsync();
 
             return View(events);
         }
@@ -249,13 +248,13 @@ namespace EventPlanning.Controllers
                 var resDate = DateTimeOffset.TryParse(date, out d);
                 if (resDate)
                 {
-                    var events = await _context.Events.Select(e => e)
+                    var events = _context.Events.Select(e => e)
                         .Where(e => e.EventDate.Date == d.Date)
-                        .AsNoTracking().ToListAsync();
+                        .AsNoTracking();
 
                     if (events.Count() > 0)
                     {
-                        var eventsModel = GetEventsModel(events);
+                        var eventsModel = await GetEventsModel(events).ToListAsync();
 
                         if (eventsModel != null)
                         {
@@ -278,7 +277,7 @@ namespace EventPlanning.Controllers
         /// </summary>
         /// <param name="events"></param>
         /// <returns></returns>
-        private IEnumerable<AllEventViewModel> GetEventsModel(IEnumerable<Event> events)
+        private IQueryable<AllEventViewModel> GetEventsModel(IQueryable<Event> events)
         {
             try
             {
@@ -288,14 +287,12 @@ namespace EventPlanning.Controllers
                 }
 
                 return events.Select(e =>
-                {
-                    return new AllEventViewModel
-                    {
+                     new AllEventViewModel
+                     {
                         Id = e.Id,
                         Name = e.Name,
                         EventDate = e.EventDate
-                    };
-                });
+                     });
             }
             catch (Exception)
             {
