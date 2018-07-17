@@ -22,7 +22,7 @@ namespace EventPlanning.Controllers
     {
         public EventController(ApplicationDbContext context,
                                UserManager<ApplicationUser> userManager,
-                               ILogger<HomeController> logger,
+                               ILogger<EventController> logger,
                                IEmailSender emailSender)
         {
             this._emailSender = emailSender;
@@ -32,7 +32,7 @@ namespace EventPlanning.Controllers
         }
 
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<EventController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
 
@@ -229,9 +229,19 @@ namespace EventPlanning.Controllers
         [HttpGet]
         public async Task<IActionResult> AllEvents()
         {
-            var events = await GetEventsModel(_context.Events).ToListAsync();
+            IQueryable<AllEventViewModel> e = GetEventsModel(_context.Events);
 
-            return View(events);
+            if (e != null)
+            {
+                var events = await e.ToListAsync();
+                if (events != null)
+                {
+                    return View(events);
+                }
+            }
+
+            _logger.LogError("Can not load events");
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         /// <summary>
@@ -299,7 +309,6 @@ namespace EventPlanning.Controllers
                 _logger.LogError("FAIL to GetEventsModel().");
                 return null;
             }
-
         }
 
         /// <summary>

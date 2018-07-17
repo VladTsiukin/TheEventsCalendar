@@ -9,23 +9,25 @@ namespace EventPlanning.Test.FakeData
 {
     public static class DbContextInitializer
     {
-        public static ApplicationDbContext GetContextWithData()
+        public static ApplicationDbContext GetContext(bool withData = true)
         {
-            return SetContextWithData();
+            return SetContext(withData);
         }
 
-        private static ApplicationDbContext SetContextWithData()
+        private static ApplicationDbContext SetContext(bool withData)
         {
-            var _options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
-            var context = new ApplicationDbContext(_options);
+            var context = new ApplicationDbContext(options);
 
-            // seed data
-            SeedEvents(context);
-            SeedSubscribers(context);
-            //
+            if (withData)
+            {
+                // seed data
+                SeedEvents(context);
+                SeedSubscribers(context);
+            }
 
             return context;
         }
