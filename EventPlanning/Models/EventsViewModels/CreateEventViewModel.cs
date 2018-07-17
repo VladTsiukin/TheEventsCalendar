@@ -6,7 +6,7 @@ namespace EventPlanning.Models.EventsViewModels
 {
     public class CreateEventViewModel
     {
-        [Required(ErrorMessage = "Поле 'Название' обязательно для заполнения")]
+        [Required(ErrorMessage = "The 'Name' field is required")]
         [MaxLength(256, ErrorMessage = "The name can not exceed 256 characters!")]
         public string Name { get; set; }
 

@@ -8,6 +8,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace EventPlanning.Test
@@ -115,6 +116,27 @@ namespace EventPlanning.Test
 
                 // Assert
                 Assert.IsType<BadRequestResult>(br);
+            }
+        }
+
+        [Fact]
+        public void CreateEvent_CheckIfNoUser()
+        {
+            try
+            {
+                // Arrange
+                using (var context = DbContextInitializer.GetContext())
+                using (var controller = new EventController(context, null, _logger, null))
+                {
+                    // Act 
+                    Assert.Throws<AggregateException>(() =>
+                        controller.CreateEvent(new CreateEventViewModel()).Result);
+                }
+            }
+            catch (AggregateException exception)
+            {
+                // Assert
+                Assert.Equal("Unable to load current user ClaimTypes.NameIdentifier", exception.Message);
             }
         }
     }

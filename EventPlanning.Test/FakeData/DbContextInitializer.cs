@@ -78,10 +78,5 @@ namespace EventPlanning.Test.FakeData
 
             await context.Subscribers.AddRangeAsync(subscribersList);
         }
-
-        //private static void SeedUser(ApplicationDbContext context)
-        //{
-        //    ;
-        //}
     }
 }

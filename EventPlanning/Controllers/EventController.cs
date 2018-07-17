@@ -54,7 +54,7 @@ namespace EventPlanning.Controllers
             var userId = this.User?.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (userId == null)
             {
-                throw new ApplicationException($"Unable to load current user ClaimTypes.NameIdentifier'.");
+                throw new ApplicationException("Unable to load current user ClaimTypes.NameIdentifier");
             }
             _logger.LogInformation("Get Current User ClaimTypes.NameIdentifier");
 
