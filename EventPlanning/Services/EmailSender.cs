@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EventPlanning.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -15,16 +16,16 @@ namespace EventPlanning.Services
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
     public class EmailSender : IEmailSender
     {
-        public EmailSender(IConfiguration configuration)
+        public EmailSender(IOptions<SendGridOptions> options)
         {
-            _options = configuration;
+            _options = options.Value;
         }
 
-        public IConfiguration _options { get; }
+        private readonly SendGridOptions _options;
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            return Execute(_options["SendGridKey"], subject, message, email);
+            return Execute(_options.SGKey, subject, message, email);
         }
 
         private Task Execute(string sendGridKey, string subject, string message, string email)

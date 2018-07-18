@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using EventPlanning.Infrastructure;
 
 namespace EventPlanning
 {
@@ -50,6 +51,16 @@ namespace EventPlanning
             services.Configure<MvcOptions>(op =>
             {
                 op.Filters.Add(new RequireHttpsAttribute());
+            });
+
+            // add options service
+            services.AddOptions();
+
+            // add sendGrid options
+            services.Configure<SendGridOptions>(op =>
+            {
+                op.SGUser = Configuration["SendGridUser"];
+                op.SGKey = Configuration["SendGridKey"];
             });
 
             // add localization options
