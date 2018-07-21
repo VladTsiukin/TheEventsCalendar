@@ -18,6 +18,12 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using EventPlanning.Infrastructure;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 
 namespace EventPlanning
 {
@@ -25,7 +31,8 @@ namespace EventPlanning
     {
         public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
+            this.Environment = env;
 
             // add environment
             var builder = new ConfigurationBuilder()
@@ -44,9 +51,52 @@ namespace EventPlanning
 
         public IConfiguration Configuration { get; }
 
+        public IHostingEnvironment Environment { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // clear jwt
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
+            // add openId auth
+            services.AddAuthentication(sharedOp =>
+            {
+                sharedOp.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOp.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOp.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+                .AddCookie()
+                .AddOpenIdConnect(op =>
+                {
+                    op.ClientId = Configuration["oidc:clientid"];
+                    op.ClientSecret = Configuration["oidc:clientsecret"];
+                    op.Authority = Configuration["oidc:authority"];
+
+                    op.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+                    op.SaveTokens = true;
+                    op.GetClaimsFromUserInfoEndpoint = true;
+
+                    op.ClaimActions.MapAllExcept("aud", "iss", "iat", "nbf", "exp", "aio", "c_hash", "uti", "nonce");
+
+                    op.Events = new OpenIdConnectEvents()
+                    {
+                        OnAuthenticationFailed = c =>
+                        {
+                            c.HandleResponse();
+
+                            c.Response.StatusCode = 500;
+                            c.Response.ContentType = "text/plain";
+                            if (this.Environment.IsDevelopment())
+                            {
+                                // Debug only, in production do not share exceptions with the remote host.
+                                return c.Response.WriteAsync(c.Exception.ToString());
+                            }
+                            return c.Response.WriteAsync("An error occurred processing your authentication.");
+                        }
+                    };
+                });
+
             // add https required
             services.Configure<MvcOptions>(op =>
             {

@@ -27,8 +27,10 @@
                 }
                 else
                 {
-                    <input asp-for="Email" class="form-control" />
-                    <button asp-action="SendVerificationEmail" class="btn btn-link">@Localizer["Verify email"]</button>
+                    <div class="input-group">
+                        <input asp-for="Email" class="form-control" />
+                        <button asp-action="SendVerificationEmail" class="btn btn-outline-danger ml-1">@Localizer["Need verify email"]</button>
+                    </div>
                 }
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
