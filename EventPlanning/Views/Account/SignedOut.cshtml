@@ -1,8 +1,10 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@{
     ViewData["Title"] = "Выйти";
 }
 
 <h2>@ViewData["Title"]</h2>
 <p class="text-success">
-    Вы успешно вышли из аккаунта.
+    @Localizer["You have successfully logged out of your account"].
 </p>

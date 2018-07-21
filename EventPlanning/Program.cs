@@ -19,6 +19,7 @@ namespace EventPlanning
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseShutdownTimeout(TimeSpan.FromSeconds(10))
                 .UseStartup<Startup>()
                 .Build();
     }

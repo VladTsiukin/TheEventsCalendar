@@ -51,7 +51,7 @@
         </a>
     </div>
 </div>
- @* Add event Modal *@
+@* Add event Modal *@
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -83,9 +83,9 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">@Localizer["Date"]</span>
                         </div>
-                        <input type="datetime-local" asp-for="EventDate" aria-label="Small" 
+                        <input type="datetime-local" asp-for="EventDate" aria-label="Small"
                                value="" class="form-control"
-                                       required aria-describedby="inputGroup-sizing-sm">
+                               required aria-describedby="inputGroup-sizing-sm">
                     </div>
                     @* INPUT NUMBER *@
                     <div class="input-group input-group-sm mb-3">
@@ -146,9 +146,9 @@
 
             // add event jquery
             $('#datepicker').datepicker()
-                .on('changeDate', function (e) {                    
+                .on('changeDate', function (e) {
                     setDateForEventDate();
-                    $('#exampleModalLong').modal('show');  
+                    $('#exampleModalLong').modal('show');
                 });
 
             // set date for the EventDate input
@@ -190,7 +190,7 @@
                 if (submitBtn != null) {
                     submitBtn.disabled = false;
                 }
-                
+
                 if (isError) {
                     $('#exampleModalLong').modal('hide');
                     $('#errorModal').modal('show');
