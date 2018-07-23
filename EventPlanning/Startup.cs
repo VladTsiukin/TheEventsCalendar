@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace EventPlanning
 {
@@ -66,36 +67,60 @@ namespace EventPlanning
                 sharedOp.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 sharedOp.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-                .AddCookie()
-                .AddOpenIdConnect(op =>
+            .AddCookie()
+            .AddOpenIdConnect(op =>
+            {
+                op.ClientId = Configuration["oidc:clientid"];
+                op.ClientSecret = Configuration["oidc:clientsecret"];
+                op.Authority = Configuration["oidc:authority"];
+
+                op.ResponseType = OpenIdConnectResponseType.Code;
+                op.SaveTokens = true;
+                op.GetClaimsFromUserInfoEndpoint = true;
+                op.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    op.ClientId = Configuration["oidc:clientid"];
-                    op.ClientSecret = Configuration["oidc:clientsecret"];
-                    op.Authority = Configuration["oidc:authority"];
+                    ValidateIssuer = true
+                };
+                op.Scope.Add("email");
 
-                    op.ResponseType = OpenIdConnectResponseType.CodeIdToken;
-                    op.SaveTokens = true;
-                    op.GetClaimsFromUserInfoEndpoint = true;
+                op.ClaimActions.MapAllExcept("aud", "iss", "iat", "nbf", "exp", "aio", "c_hash", "uti", "nonce");
 
-                    op.ClaimActions.MapAllExcept("aud", "iss", "iat", "nbf", "exp", "aio", "c_hash", "uti", "nonce");
-
-                    op.Events = new OpenIdConnectEvents()
+                op.Events = new OpenIdConnectEvents()
+                {
+                    OnAuthenticationFailed = c =>
                     {
-                        OnAuthenticationFailed = c =>
-                        {
-                            c.HandleResponse();
+                        c.HandleResponse();
 
-                            c.Response.StatusCode = 500;
-                            c.Response.ContentType = "text/plain";
-                            if (this.Environment.IsDevelopment())
-                            {
-                                // Debug only, in production do not share exceptions with the remote host.
-                                return c.Response.WriteAsync(c.Exception.ToString());
-                            }
-                            return c.Response.WriteAsync("An error occurred processing your authentication.");
+                        c.Response.StatusCode = 500;
+                        c.Response.ContentType = "text/plain";
+                        if (this.Environment.IsDevelopment())
+                        {
+                            // Debug only, in production do not share exceptions with the remote host.
+                            return c.Response.WriteAsync(c.Exception.ToString());
                         }
-                    };
-                });
+                        return c.Response.WriteAsync("An error occurred processing your authentication.");
+                    },
+                    OnUserInformationReceived = c =>
+                    {
+                        // add role user
+                        c.Principal.AddIdentity(new ClaimsIdentity
+                            (new List<Claim>
+                                {
+                                    new Claim(ClaimsIdentity.DefaultRoleClaimType, "user")
+                                }));
+
+                        var emailVerified = c.Principal.FindFirst(claim => claim.Type == "email_verified").Value;
+                        bool resEmailVerif = false;
+                        bool.TryParse(emailVerified, out resEmailVerif);
+                        if (!resEmailVerif)
+                        {
+                            return c.Response.WriteAsync("Confirm email in your google account.");
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             // add https required
             services.Configure<MvcOptions>(op =>

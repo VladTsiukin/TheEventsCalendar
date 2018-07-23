@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using EventPlanning.Models;
 using EventPlanning.Models.AccountViewModels;
 using EventPlanning.Services;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace EventPlanning.Controllers
 {
@@ -25,6 +26,7 @@ namespace EventPlanning.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private const string _userRole = "user";
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -311,7 +313,6 @@ namespace EventPlanning.Controllers
             {
                 return RedirectToAction(nameof(Login));
             }
-
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
@@ -346,14 +347,16 @@ namespace EventPlanning.Controllers
                 {
                     throw new ApplicationException("Error loading external login information during confirmation.");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    // ADD ROLE
                     result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
+                    var roleRes = await _userManager.AddToRoleAsync(user, _userRole);
+                    if (result.Succeeded && roleRes.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await _signInManager.SignInAsync(user, isPersistent: true);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
                     }
