@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +23,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+
 
 namespace EventPlanning
 {
@@ -108,7 +107,7 @@ namespace EventPlanning
                                 {
                                     new Claim(ClaimsIdentity.DefaultRoleClaimType, "user")
                                 }));
-
+                        // check email is verified
                         var emailVerified = c.Principal.FindFirst(claim => claim.Type == "email_verified").Value;
                         bool resEmailVerif = false;
                         bool.TryParse(emailVerified, out resEmailVerif);
